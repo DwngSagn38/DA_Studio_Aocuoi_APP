@@ -6,6 +6,10 @@ import HomeScreen from '../screens/HomeScreen';
 import DichVuScreen from '../screens/DichVuScreen';
 import HoaDonScreen from '../screens/HoaDonScreen';
 import ThongKeScreen from '../screens/ThongKeScreen';
+import DichVuChiTiet from '../screens/DichVuChiTiet';
+import Profile from '../screens/Profile';
+import ManageUser from '../screens/ManageUser';
+import KhachHangScreen from '../screens/KhachHangScreen';
 
 
 
@@ -56,7 +60,10 @@ const MainNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Home' component={Home} />
-            
+            <Stack.Screen name='DichVuChiTiet' component={DichVuChiTiet} />
+            <Stack.Screen name='Profile' component={Profile} />
+            <Stack.Screen name='ManageUser' component={ManageUser} />
+            <Stack.Screen name='KhachHangScreen' component={KhachHangScreen} />
         </Stack.Navigator>
     )
 }
