@@ -6,8 +6,15 @@ import HomeScreen from '../screens/HomeScreen';
 import DichVuScreen from '../screens/DichVuScreen';
 import HoaDonScreen from '../screens/HoaDonScreen';
 import ThongKeScreen from '../screens/ThongKeScreen';
+<<<<<<< HEAD
 import DetailDichVu from '../screens/DetailDichVu';
 import OptionMenu from '../screens/OptionMenu';
+=======
+import DichVuChiTiet from '../screens/DichVuChiTiet';
+import Profile from '../screens/Profile';
+import ManageUser from '../screens/ManageUser';
+import KhachHangScreen from '../screens/KhachHangScreen';
+>>>>>>> 6f29e31fc63d174975a65510dda5ae3e61c7df37
 
 
 
@@ -58,8 +65,10 @@ const MainNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Home' component={Home} />
-            <Stack.Screen name='DetailDichVu' component={DetailDichVu} />
-            <Stack.Screen name='OptionMenu' component={OptionMenu} />
+            <Stack.Screen name='DichVuChiTiet' component={DichVuChiTiet} />
+            <Stack.Screen name='Profile' component={Profile} />
+            <Stack.Screen name='ManageUser' component={ManageUser} />
+            <Stack.Screen name='KhachHangScreen' component={KhachHangScreen} />
         </Stack.Navigator>
     )
 }
