@@ -1,10 +1,79 @@
 import { Image, StyleSheet, Text, TextInput, View, CheckBox, TouchableOpacity, ToastAndroid, KeyboardAvoidingView, Platform, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { URL } from './HomeScreen'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const LoginScreen = ({navigation}) => {
-    const [email, setemail] = useState('')
+const LoginScreen = ({ navigation }) => {
     const [pass, setpass] = useState('')
-    const [showPass, setshowPass] = useState(true)
+    const [user, setuser] = useState('')
+    const [remember, setremember] = useState(false)
+    const [showPass, setshowPass] = useState(true);
+
+    const Login = async () => {
+        const User = {
+            username: user,
+            password: pass
+        }
+        const url = `${URL}/login`
+        const res = await fetch(url,
+            {
+                method: "POST",
+                body: JSON.stringify(User),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        const data = await res.json();
+        if (res.status != 200) {
+            ToastAndroid.show(data.msg, 0);
+            return;
+        }
+        if (data.status == 200) {
+            ToastAndroid.show(data.msg, 0);
+            // Lưu thông tin người dùng vào AsyncStorage
+            try {
+                await AsyncStorage.setItem('userData', JSON.stringify(data.data));
+                // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
+                rememberAccount();
+                navigation.navigate('Main');
+            } catch (error) {
+                console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
+            }
+        }
+    }
+
+    const rememberAccount = async () => {
+        try {
+            if (remember) {
+                await AsyncStorage.setItem('username', user);
+                await AsyncStorage.setItem('password', pass);
+            } else {
+                await AsyncStorage.removeItem('username');
+                await AsyncStorage.removeItem('password');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const retrieveData = async () => {
+        try {
+            const storedUsername = await AsyncStorage.getItem('username');
+            const storedPassword = await AsyncStorage.getItem('password');
+            if (storedUsername !== null && storedPassword !== null) {
+                setuser(storedUsername);
+                setpass(storedPassword);
+                setremember(true);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        retrieveData()
+    }, [])
+
 
     return (
         <KeyboardAvoidingView
@@ -14,39 +83,41 @@ const LoginScreen = ({navigation}) => {
                     source={require('../assets/image/logo.png')} />
                 <View style={{ gap: 30 }}>
                     <Text style={{ fontWeight: 'bold', textAlign: 'center', justifyContent: 'center', fontSize: 24 }}>Đăng nhập để tiếp tục</Text>
-                    <View style={{ gap: 10}}>
+                    <View style={{ gap: 10 }}>
                         <Text style={{ fontSize: 13, color: 'gray' }}>YOUR USERNAME</Text>
                         <TextInput style={[styles.input, { width: '90' }]}
-                            placeholder='Nhập email hoặc số điện thoại' onChangeText={(txt) => {
-                                setemail(txt)
-                            }} />
+                            placeholder='Nhập username' onChangeText={(txt) => {
+                                setuser(txt)
+                            }}
+                            value={user} />
                     </View>
-                    <View style={{ gap: 10 , width: '90%' }}>
+                    <View style={{ gap: 10, width: '90%' }}>
                         <Text style={{ fontSize: 13, color: 'gray' }}>PASSWORD</Text>
                         <View style={styles.input}>
                             <TextInput style={{ width: '90%' }} secureTextEntry={showPass ? true : false}
                                 placeholder='Nhập mật khẩu' onChangeText={(txt) => {
                                     setpass(txt)
-                                }} />
+                                }}
+                                value={pass} />
                             <TouchableOpacity onPress={() => setshowPass(!showPass)}>
-                                <Image style={{ width: 20, height: 20 }}
+                                <Image style={{ width: 22, height: 22 }}
                                     source={showPass ? require('../assets/image/visible.png') : require('../assets/image/invisible.png')} />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => { setremember(!remember) }}>
                                 <Image style={{ width: 20, height: 20 }}
-                                    source={require('../assets/image/check.png')} />
+                                    source={remember ? require('../assets/image/checkbox.png') : require('../assets/image/checkboxempty.png')} />
                             </TouchableOpacity>
                             <Text style={{ marginLeft: 10 }}>Nhớ tài khoản</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.btn} onPress={() => {navigation.navigate("Main")}}>
+                    <TouchableOpacity style={styles.btn} onPress={() => { Login() }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Đăng nhập</Text>
                     </TouchableOpacity>
-                    <Text style={{ textAlign: 'center', color: 'pink' }}>________________<Text style={{color: 'black'}}>Hoặc</Text>________________</Text>
+                    <Text style={{ textAlign: 'center', color: 'pink' }}>________________<Text style={{ color: 'black' }}>Hoặc</Text>________________</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity>
                             <Image style={styles.image}

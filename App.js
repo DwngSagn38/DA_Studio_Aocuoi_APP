@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import WelcomeScreen from './screens/WelcomeScreen';
 import AuthNavigator from './navigator/AuthNavigator';
 import { NavigationContainer } from '@react-navigation/native';
+import MainNavigator from './navigator/MainNavigator';
 
 export default function App() {
   const [checkWelcome, setcheckWelcome] = useState(true);

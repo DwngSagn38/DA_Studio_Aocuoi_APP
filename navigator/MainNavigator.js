@@ -6,6 +6,8 @@ import HomeScreen from '../screens/HomeScreen';
 import DichVuScreen from '../screens/DichVuScreen';
 import HoaDonScreen from '../screens/HoaDonScreen';
 import ThongKeScreen from '../screens/ThongKeScreen';
+import DetailDichVu from '../screens/DetailDichVu';
+import OptionMenu from '../screens/OptionMenu';
 
 
 
@@ -19,7 +21,7 @@ function Home() {
             tabBarInactiveBackgroundColor: '#FFE6E6',
             tabBarActiveBackgroundColor: '#FFE6E6',
         }}>
-            <Tab.Screen name='Home' component={HomeScreen}
+            <Tab.Screen name='HomeScreen' component={HomeScreen}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
@@ -56,7 +58,8 @@ const MainNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name='Home' component={Home} />
-            
+            <Stack.Screen name='DetailDichVu' component={DetailDichVu} />
+            <Stack.Screen name='OptionMenu' component={OptionMenu} />
         </Stack.Navigator>
     )
 }
