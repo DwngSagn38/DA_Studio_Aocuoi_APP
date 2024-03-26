@@ -1,37 +1,39 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
 const Profile = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>PROFILE</Text>
+        <TouchableOpacity onPress={()=>{navigation.goBack()}}>
+          <Image source={require('../assets/image/back.png')} style={styles.icon} />
+        </TouchableOpacity>
+        <Text style={styles.title}>PROFILE</Text>
+        <View />
       </View>
 
       <View style={styles.infor}>
-      <Image style={{ width: 200, height: 200 }}
+      <Image style={{ width: 90, height: 90 }}
                     source={require('../assets/image/pesonal.png')} />
-        <Text>
-          <Text style={{ fontSize: 17, fontWeight: 'bold' }}>Vũ Thị Vân Anh</Text>
-          {'\n'} anhvtvph42837@fpt.edu.vn
-        </Text>
+        
+      <Text>
+      <Text style={{ fontSize: 17, fontWeight: 'bold' }}>Vũ Thị Vân Anh</Text>{'\n'}
+      <Text style={{textDecorationLine: 'underline'}}>anhvtvph42837@fpt.edu.vn</Text>
+      </Text>
       </View>
 
       <View style={styles.option}>
         <Text style={styles.textGray}>Chung 
         {'\n'}_________________________________________________</Text>
         <Text onPress={() => navigation.navigate('ManageUser')}>Chỉnh sửa thông tin</Text>
-        <Text>Cẩm năng trồng cây</Text>
-        <Text>Lịch sử giao dịch</Text>
-        <Text>Q & A</Text>
+        <Text>Chi tiết công việc</Text>
       </View>
 
       <View style={styles.option}>
         <Text style={styles.textGray}>Bảo mật và điều khoản 
         {'\n'}_________________________________________________</Text>
-        <Text>Điền khoản và điều kiện</Text>
-        <Text>Chính sách quyền riêng tư</Text>
-        <Text style={{color: 'red'}} onPress={()=> navigation.navigate('LoginScreen')}>Đăng xuất</Text>
+        <Text>Quên mật khẩu</Text>
+        <Text>Đổi mật khẩu</Text>
       </View>
     </View>
   )
@@ -61,5 +63,14 @@ const styles = StyleSheet.create({
   },
   textGray:{
     color: 'gray'
+  },
+  header: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 30, marginBottom: 10 },
+  icon: {
+    width: 24,
+    height: 24
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 })

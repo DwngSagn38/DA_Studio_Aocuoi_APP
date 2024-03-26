@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 
@@ -41,6 +41,20 @@ const DichVuScreen = () => {
         <Image source={require('../assets/image/pesonal.png')} style={styles.icon} />
       </View>
 
+      <View style={styles.search}>
+        <TextInput
+          placeholder='Search' style={{ marginStart: 10, marginEnd: 10, flex: 1 }} />
+        <TouchableOpacity onPress={() => {}}>
+          <Image source={require('../assets/image/search.png')} style={styles.icon} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={{flexDirection: 'row', gap: 20, padding: 20}}>
+        <Text style={{color: 'red', fontWeight: 'bold'}}>All</Text>
+        <Text style={{color: 'black', fontWeight: 'bold'}}>Dịch vụ lẻ</Text>
+        <Text style={{color: 'black', fontWeight: 'bold'}}>Dịch vụ trọn gói</Text>
+      </View>
+
       <FlatList
         numColumns={2}
         data={ListDichVu}
@@ -60,7 +74,8 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 35
+    padding: 25,
+    marginTop: 10
   },
   icon: {
     width: 24,
@@ -94,5 +109,13 @@ const styles = StyleSheet.create({
   cardPrice: {
     color: 'red',
     fontSize: 13
-  }
+  },
+  search: {
+    width: '90%',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    padding: 10,
+    margin: '5%'
+  },
 })

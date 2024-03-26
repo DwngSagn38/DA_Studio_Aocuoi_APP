@@ -1,7 +1,7 @@
 import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-export const URL = 'http://10.24.58.242:3000';
+export const URL = 'http://192.168.100.3:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -42,7 +42,9 @@ const HomeScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('OptionMenu')}>
           <Image source={require('../assets/image/menu.png')} style={styles.icon} />
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>{navigation.navigate('Profile')}}>
         <Image source={require('../assets/image/pesonal.png')} style={styles.icon} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -93,7 +95,8 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 35
+    padding: 25,
+    marginTop: 10
   },
   viewSt: {
     flex: 1,

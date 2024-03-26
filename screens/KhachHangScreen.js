@@ -1,12 +1,12 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const KhachHangScreen = () => {
+const KhachHangScreen = ({navigation}) => {
   return (
     <View style = {styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image style={{ width: 20, height: 20 }}
+        <Image style={{ width: 24, height: 24 }}
                     source={require('../assets/image/back.png')} />
         </TouchableOpacity>
         <Text style={{ marginLeft: 20, fontSize: 18, fontWeight: 'bold' }}>Danh sách khách hàng</Text>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
       header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         paddingVertical: 30
       },
       khachHang: {

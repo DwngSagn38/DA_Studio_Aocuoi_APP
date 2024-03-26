@@ -8,15 +8,15 @@ const ManageUser = ({ navigation, route }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image style={{ width: 20, height: 20 }}
-                    source={require('../assets/image/back.png')} />
+          <Image style={{ width: 20, height: 20 }}
+            source={require('../assets/image/back.png')} />
         </TouchableOpacity>
         <Text style={{ marginLeft: 80, fontSize: 18, fontWeight: 'bold' }}>Chỉnh sửa thông tin</Text>
       </View>
-      <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center' }}>
-      <Image style={{ width: 200, height: 200 }}
-                    source={require('../assets/image/pesonal.png')} />
-        <Text style={{ textAlign: 'center', fontSize: 20 }}>Chỉnh sửa thông tin của bạn</Text>
+      <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center', gap: 14 }}>
+        <Image style={{ width: 200, height: 200 }}
+          source={require('../assets/image/pesonal.png')} />
+        <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chính sửa</Text>
       </View>
       <View style={styles.textInput}>
         <TextInput style={styles.input} placeholder='Fullname' onChangeText={setText} />
@@ -25,10 +25,10 @@ const ManageUser = ({ navigation, route }) => {
         <TextInput style={styles.input} placeholder='Number phone' onChangeText={setText} />
       </View>
       <TouchableOpacity style={styles.button}>
-        <Text style={{color: 'white'}}>CHỌN ẢNH</Text>
+        <Text>CHỌN ẢNH</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
-        <Text style={{color: 'white'}}>LƯU THÔNG TIN</Text>
+        <Text>LƯU THÔNG TIN</Text>
       </TouchableOpacity>
     </View>
   )
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: 'green',
+    backgroundColor: '#FFC0CB',
     alignItems: 'center'
   }
 })
