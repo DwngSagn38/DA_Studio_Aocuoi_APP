@@ -1,7 +1,7 @@
 import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-export const URL = 'http://192.168.100.3:3000';
+export const URL = 'http://192.168.1.102:3000';
 
 const HomeScreen = ({ navigation }) => {
 

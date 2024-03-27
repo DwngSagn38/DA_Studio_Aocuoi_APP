@@ -22,8 +22,8 @@ const OptionMenu = ({navigation}) => {
         <Text style={styles.title}>OPTION</Text>
         <View />
       </View>
-      <RenderItem icon={require('../assets/image/group.png')} title={"Danh sách nhân viên"} onPress={()=>navigation.navigate('KhachHangScreen')}/>
-      <RenderItem icon={require('../assets/image/add_user2.png')} title={"Thêm nhân viên mới"} onPress={()=>navigation.navigate('KhachHangScreen')}/>
+      <RenderItem icon={require('../assets/image/group.png')} title={"Danh sách nhân viên"} onPress={()=>navigation.navigate('ListNhanVien')}/>
+      <RenderItem icon={require('../assets/image/add_user2.png')} title={"Thêm nhân viên mới"} onPress={()=>navigation.navigate('ThemNhanVien')}/>
       <RenderItem icon={require('../assets/image/gust.png')} title={"Danh sách khách hàng"} onPress={()=>navigation.navigate('KhachHangScreen')}/>
       <RenderItem icon={require('../assets/image/job.png')} title={"Công việc"} onPress={()=>navigation.navigate('KhachHangScreen')}/>
       <RenderItem icon={require('../assets/image/logout.png')} title={"Đăng xuất"} onPress={()=>navigation.navigate('LoginScreen')}/>
