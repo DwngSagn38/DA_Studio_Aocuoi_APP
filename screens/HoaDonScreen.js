@@ -3,7 +3,7 @@ import React from 'react'
 
 const HoaDonScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>HoaDonScreen</Text>
     </View>
   )
@@ -11,4 +11,9 @@ const HoaDonScreen = () => {
 
 export default HoaDonScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 60
+  },
+})

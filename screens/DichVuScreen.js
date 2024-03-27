@@ -4,14 +4,45 @@ import { URL } from './HomeScreen';
 
 const DichVuScreen = () => {
   const [ListDichVu, setListDichVu] = useState([]);
+  const [ListSearch, setListSearch] = useState([]);
+  const [search, setsearch] = useState('')
+  const [typeDichVu, settypeDichVu] = useState(0);
+
+
 
   const getListDichVu = async () => {
     const url = `${URL}/dichvus`;
     try {
       const res = await fetch(url);
       const data = await res.json();
-      console.log(data);
-      setListDichVu(data);
+      if(typeDichVu == 0){
+        setListDichVu(data.data);
+      }else if(typeDichVu == 1){
+        const listType = data.data.filter((item)=> item.type == true);
+        setListDichVu(listType);
+      }else{
+        const listType = data.data.filter((item)=> item.type == false);
+        setListDichVu(listType);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const getListSearch = async () => {
+    const url = `${URL}/dichvus/search?key=${search}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      if(typeDichVu == 0){
+        setListSearch(data.data);
+      }else if(typeDichVu == 1){
+        const listType = data.data.filter((item)=> item.type == true);
+        setListSearch(listType);
+      }else{
+        const listType = data.data.filter((item)=> item.type == false);
+        setListSearch(listType);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -33,31 +64,31 @@ const DichVuScreen = () => {
 
   useEffect(() => {
     getListDichVu()
-  }, [])
+    getListSearch()
+  }, [search,typeDichVu])
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image source={require('../assets/image/menu.png')} style={styles.icon} />
-        <Image source={require('../assets/image/pesonal.png')} style={styles.icon} />
-      </View>
-
       <View style={styles.search}>
         <TextInput
-          placeholder='Search' style={{ marginStart: 10, marginEnd: 10, flex: 1 }} />
-        <TouchableOpacity onPress={() => {}}>
+          placeholder='Search' style={{ marginStart: 10, marginEnd: 10, flex: 1 }}
+          onChangeText={(txt) => setsearch(txt)} />
+        <TouchableOpacity onPress={() => { }}>
           <Image source={require('../assets/image/search.png')} style={styles.icon} />
         </TouchableOpacity>
       </View>
 
-      <View style={{flexDirection: 'row', gap: 20, padding: 20}}>
-        <Text style={{color: 'red', fontWeight: 'bold'}}>All</Text>
-        <Text style={{color: 'black', fontWeight: 'bold'}}>Dịch vụ lẻ</Text>
-        <Text style={{color: 'black', fontWeight: 'bold'}}>Dịch vụ trọn gói</Text>
+      <View style={{ flexDirection: 'row', gap: 20, padding: 20 }}>
+        <Text onPress={() => { settypeDichVu(0) }}
+          style={{ color: typeDichVu == 0 ? 'red' : 'black', fontWeight: 'bold' }}>All</Text>
+        <Text onPress={() => { settypeDichVu(1) }}
+          style={{ color: typeDichVu == 1 ? 'red' : 'black', fontWeight: 'bold' }}>Dịch vụ lẻ</Text>
+        <Text onPress={() => { settypeDichVu(2) }}
+          style={{ color: typeDichVu == 2 ? 'red' : 'black', fontWeight: 'bold' }}>Dịch vụ trọn gói</Text>
       </View>
 
       <FlatList
         numColumns={2}
-        data={ListDichVu}
+        data={ListSearch.length > 0 ? ListSearch : ListDichVu}
         keyExtractor={item => item._id}
         renderItem={renderItem}></FlatList>
     </View>
@@ -69,13 +100,13 @@ export default DichVuScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 60
   },
   header: {
     height: 60,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 25,
-    marginTop: 10
   },
   icon: {
     width: 24,

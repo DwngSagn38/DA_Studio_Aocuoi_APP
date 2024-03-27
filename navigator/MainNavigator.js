@@ -13,6 +13,7 @@ import KhachHangScreen from '../screens/KhachHangScreen';
 import OptionMenu from '../screens/OptionMenu';
 import ListNhanVien from '../screens/ListNhanVien';
 import ThemNhanVien from '../screens/ThemNhanVien';
+import Header from './Header';
 
 
 
@@ -28,28 +29,28 @@ function Home() {
         }}>
             <Tab.Screen name='HomeScreen' component={HomeScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/home.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Dịch vụ' component={DichVuScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/dichvu.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Hóa đơn' component={HoaDonScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/hoadon.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Thống kê' component={ThongKeScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/thongke.png')} tintColor={color} />
                 }} />

@@ -38,15 +38,6 @@ const HomeScreen = ({ navigation }) => {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('OptionMenu')}>
-          <Image source={require('../assets/image/menu.png')} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{navigation.navigate('Profile')}}>
-        <Image source={require('../assets/image/pesonal.png')} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         scrollEnabled={true}
       >
@@ -90,6 +81,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 60
   },
   header: {
     height: 60,
