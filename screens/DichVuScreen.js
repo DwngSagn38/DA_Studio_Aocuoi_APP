@@ -15,13 +15,13 @@ const DichVuScreen = () => {
     try {
       const res = await fetch(url);
       const data = await res.json();
-      if(typeDichVu == 0){
+      if (typeDichVu == 0) {
         setListDichVu(data.data);
-      }else if(typeDichVu == 1){
-        const listType = data.data.filter((item)=> item.type == true);
+      } else if (typeDichVu == 1) {
+        const listType = data.data.filter((item) => item.type == true);
         setListDichVu(listType);
-      }else{
-        const listType = data.data.filter((item)=> item.type == false);
+      } else {
+        const listType = data.data.filter((item) => item.type == false);
         setListDichVu(listType);
       }
     } catch (err) {
@@ -34,13 +34,13 @@ const DichVuScreen = () => {
     try {
       const res = await fetch(url);
       const data = await res.json();
-      if(typeDichVu == 0){
+      if (typeDichVu == 0) {
         setListSearch(data.data);
-      }else if(typeDichVu == 1){
-        const listType = data.data.filter((item)=> item.type == true);
+      } else if (typeDichVu == 1) {
+        const listType = data.data.filter((item) => item.type == true);
         setListSearch(listType);
-      }else{
-        const listType = data.data.filter((item)=> item.type == false);
+      } else {
+        const listType = data.data.filter((item) => item.type == false);
         setListSearch(listType);
       }
     } catch (err) {
@@ -65,16 +65,14 @@ const DichVuScreen = () => {
   useEffect(() => {
     getListDichVu()
     getListSearch()
-  }, [search,typeDichVu])
+  }, [search, typeDichVu])
   return (
     <View style={styles.container}>
       <View style={styles.search}>
+        <Image source={require('../assets/image/search.png')} style={styles.icon} />
         <TextInput
           placeholder='Search' style={{ marginStart: 10, marginEnd: 10, flex: 1 }}
           onChangeText={(txt) => setsearch(txt)} />
-        <TouchableOpacity onPress={() => { }}>
-          <Image source={require('../assets/image/search.png')} style={styles.icon} />
-        </TouchableOpacity>
       </View>
 
       <View style={{ flexDirection: 'row', gap: 20, padding: 20 }}>

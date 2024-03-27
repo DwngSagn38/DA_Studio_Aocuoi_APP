@@ -49,18 +49,15 @@ const ListNhanVien = ({ navigation }) => {
                         setTrangThai(item.trangThai),
                         setGhichu(item.ghiChu)
                 }}>
-
-                <View style={styles.khachHang}>
-                    <Image style={{ width: 120, height: 120, borderRadius: 10 }}
-                        source={{ uri: item.avatar }} />
-                    <View style={styles.text}>
-                        <Text style={{ fontWeight: 'bold' }}>{item.fullname}</Text>
-                        <Text>{item.address}</Text>
-                        <Text>{item.phone}</Text>
-                        {item.trangThai
-                            ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
-                            : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
-                    </View>
+                <Image style={{ width: 120, height: 120, borderRadius: 10 }}
+                    source={item.avatar != null ? { uri: item.avatar } : require('../assets/image/pesonal.png')} />
+                <View style={styles.text}>
+                    <Text style={{ fontWeight: 'bold' }}>{item.fullname}</Text>
+                    <Text>ĐC: {item.address != null ? item.address : 'chưa thêm'}</Text>
+                    <Text>SĐT: {item.phone != null ? item.phone : 'chưa thêm'}</Text>
+                    {item.trangThai
+                        ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
+                        : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
                 </View>
             </TouchableOpacity>
         )
@@ -90,30 +87,28 @@ const ListNhanVien = ({ navigation }) => {
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width: '90%', margin: 20, backgroundColor: 'white', borderRadius: 20, padding: 35, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, }}>
+                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+                    <View style={{ width: '90%', margin: 20, backgroundColor: 'white', borderRadius: 20, padding: 25, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>Chi tiết nhân viên</Text>
-                        <Image style={{ width: 100, height: 100 }}
-                            source={{uri : Avatar}} />
-                        <View style={styles.khachHang}>
+                        <Image style={{ width: 180, height: 180, borderRadius: 20 }}
+                            source={Avatar != null ? { uri: Avatar } : require('../assets/image/pesonal.png')} />
 
-                            <View style={[styles.text, { marginTop: 10 }]}>
-                                <Text style={{ fontWeight: 'bold' }}>Họ và tên: {Fullname}</Text>
-                                <Text>Email: {Email}</Text>
-                                <Text>Địa chỉ: {Address}</Text>
-                                <Text>Số điện thoại: {Phone}</Text>
-                                <Text>Ghi chú: {Ghichu}</Text>
-                                {TrangThai
-                                    ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
-                                    : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
+                        <View style={[{ marginTop: 10, width: '100%', gap: 9 }]}>
+                            <Text style={{ fontWeight: 'bold' }}>Họ và tên: {Fullname}</Text>
+                            <Text>Email: {Email != null ? Email : 'Chưa thêm'}</Text>
+                            <Text>Địa chỉ: {Address != null ? Address : 'Chưa thêm'}</Text>
+                            <Text>Số điện thoại: {Phone != null ? Phone : 'Chưa thêm'}</Text>
+                            <Text>Ghi chú: {Ghichu != null ? Ghichu : 'Không có'}</Text>
+                            {TrangThai
+                                ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
+                                : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
 
-                                {/* {trangThai ? <Text style={{ color: '#4CAF50' }}>Đang làm việc</Text> : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>} */}
-                            </View>
                         </View>
+
                         <Pressable
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}>
-                            <Text style={styles.textStyle}>Cancel</Text>
+                            <Text style={styles.textStyle}>Quay lại</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -136,19 +131,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 30
     },
-    khachHang: {
-        flexDirection: 'row',
-        justifyContent: 'space-around'
-    },
     text: {
-        gap: 10
+        width: '60%',
+        gap: 10,
+        marginLeft: 20
     },
     card: {
-        width: '100%',
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#7F7F7F',
-        padding: 20
+        padding: 20,
+        marginBottom: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     }, button: {
         borderRadius: 20,
         padding: 10,
