@@ -1,7 +1,27 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Profile = ({navigation, route}) => {
+const Profile = ({navigation}) => {
+  const [User, setUser] = useState(null);
+  
+  const retrieveData = async () => {
+    try {
+      const UserData = await AsyncStorage.getItem('User');
+      if(UserData != null){
+        setUser(UserData);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log(User)
+
+  useEffect(() => {
+    retrieveData();
+  }, [])
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -17,7 +37,7 @@ const Profile = ({navigation, route}) => {
                     source={require('../assets/image/pesonal.png')} />
         
       <Text>
-      <Text style={{ fontSize: 17, fontWeight: 'bold' }}>Vũ Thị Vân Anh</Text>{'\n'}
+      <Text style={{ fontSize: 17, fontWeight: 'bold' }}>Vân Anh</Text>{'\n'}
       <Text style={{textDecorationLine: 'underline'}}>anhvtvph42837@fpt.edu.vn</Text>
       </Text>
       </View>
