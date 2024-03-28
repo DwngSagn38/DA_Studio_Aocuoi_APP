@@ -11,7 +11,7 @@ const RenderItem = ({ icon, title, onPress}) => {
   )
 }
 
-const OptionMenu = ({navigation}) => {
+const OptionMenu = ({navigation}) => { 
 
   return (
     <View style={styles.container}>
