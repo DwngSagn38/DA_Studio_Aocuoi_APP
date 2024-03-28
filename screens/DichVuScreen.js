@@ -2,7 +2,7 @@ import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 
-const DichVuScreen = () => {
+const DichVuScreen = ({navigation}) => {
   const [ListDichVu, setListDichVu] = useState([]);
   const [ListSearch, setListSearch] = useState([]);
   const [search, setsearch] = useState('')
@@ -50,7 +50,7 @@ const DichVuScreen = () => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
@@ -58,7 +58,7 @@ const DichVuScreen = () => {
           <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 

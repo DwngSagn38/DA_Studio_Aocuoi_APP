@@ -38,7 +38,7 @@ const ManageUser = ({ navigation, route }) => {
       </View>
       <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center', gap: 14 }}>
         <Image style={{ width: 200, height: 200, borderRadius: 30 }}
-          source={selectedImage != null ? { uri: selectedImage } : require('../assets/image/pesonal.png')} />
+          source={User.avatar || selectedImage ? {uri : selectedImage || User.avatar } : require('../assets/image/pesonal.png')} />
         <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chính sửa</Text>
       </View>
       <View style={styles.textInput}>
