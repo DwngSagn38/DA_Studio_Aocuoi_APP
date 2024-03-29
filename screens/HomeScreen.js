@@ -2,7 +2,7 @@ import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text,
 import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 
-export const URL = 'http://10.24.25.165:3000';
+export const URL = 'http://192.168.100.3:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -22,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     getListDichVu()
-  }, [])
+  }, [navigation])
 
   const renderItem = ({ item, index }) => {
     return (
@@ -59,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             scrollEnabled={false}
             numColumns={2}
-            data={ListDichVu.filter((item) => item.type == false)}
+            data={ListDichVu.filter((item) => item.type == false).slice(0,2)}
             keyExtractor={item => item._id}
             renderItem={renderItem}></FlatList>
         </View>
@@ -69,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             scrollEnabled={false}
             numColumns={2}
-            data={ListDichVu.filter((item) => item.type == true)}
+            data={ListDichVu.filter((item) => item.type == true).slice(0,4)}
             keyExtractor={item => item._id}
             renderItem={renderItem}></FlatList>
         </View>

@@ -2,7 +2,7 @@ import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpaci
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 
-const DichVuScreen = ({navigation}) => {
+const DichVuScreen = ({ navigation }) => {
   const [ListDichVu, setListDichVu] = useState([]);
   const [ListSearch, setListSearch] = useState([]);
   const [search, setsearch] = useState('')
@@ -50,7 +50,7 @@ const DichVuScreen = ({navigation}) => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <Pressable style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
+      <Pressable style={styles.card} onPress={() => { navigation.navigate('DichVuChiTiet', { item: item }) }}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
@@ -65,7 +65,7 @@ const DichVuScreen = ({navigation}) => {
   useEffect(() => {
     getListDichVu()
     getListSearch()
-  }, [search, typeDichVu])
+  }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>
       <View style={styles.search}>
@@ -89,6 +89,12 @@ const DichVuScreen = ({navigation}) => {
         data={ListSearch.length > 0 ? ListSearch : ListDichVu}
         keyExtractor={item => item._id}
         renderItem={renderItem}></FlatList>
+
+
+      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu',{item: ''})}}
+        style={styles.btnAdd}>
+        <Image source={require('../assets/image/add.png')} style={styles.icon} />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -146,5 +152,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     margin: '5%'
+  },
+  btnAdd: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 40,
+    bottom: 80,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 })
