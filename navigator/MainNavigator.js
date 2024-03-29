@@ -26,6 +26,7 @@ function Home() {
             tabBarActiveTintColor: 'red',
             tabBarInactiveBackgroundColor: '#FFE6E6',
             tabBarActiveBackgroundColor: '#FFE6E6',
+            
         }}>
             <Tab.Screen name='HomeScreen' component={HomeScreen}
                 options={{
