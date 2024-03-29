@@ -26,18 +26,6 @@ const RenderItem = ({ icon, title, onPress }) => {
   );
 };
 
-// const retrieveData = async () => {
-//   try {
-//       const storedUsername = await AsyncStorage.getItem('username');
-//       const storedPassword = await AsyncStorage.getItem('password');
-//       if (storedUsername !== null && storedPassword !== null) {
-//         await AsyncStorage.setItem('username','');
-//         await AsyncStorage.setItem('password','');
-//       }
-//   } catch (error) {
-//       console.error(error);
-//   }
-// };
 
 const OptionMenu = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,12 +37,12 @@ const OptionMenu = ({ navigation }) => {
     fullname: fullName,
     username: username,
     password: password,
-    email: "", 
-    address:"", 
-    phone: "", 
-    ghiChu: "", 
+    email: null, 
+    address:null, 
+    phone: null, 
+    ghiChu: null, 
     trangThai:true,
-    avatar: "", 
+    avatar: null, 
     role: 0 
   };
   const saveNV = async () => {
@@ -133,7 +121,7 @@ const OptionMenu = ({ navigation }) => {
       <RenderItem
         icon={require("../assets/image/job.png")}
         title={"Công việc"}
-        onPress={() => navigation.navigate("KhachHangScreen")}
+        onPress={() => navigation.navigate("CongViecScreen")}
       />
       <RenderItem
         icon={require("../assets/image/logout.png")}
@@ -302,4 +290,7 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: "center",
   },
+  textStyle:{
+    color: 'white'
+},
 });

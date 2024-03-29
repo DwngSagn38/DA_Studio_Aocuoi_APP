@@ -33,9 +33,14 @@ const KhachHangScreen = ({ navigation }) => {
             <Text style={{ fontWeight: 'bold' }}>{item.tenKhachHang}</Text>
             <Text>{item.dienThoai}</Text>
             <Text>{item.diaChi}</Text>
-            <TouchableOpacity>
-              <Text style={{ textAlign: 'right', textDecorationLine: 'underline' }}>Edit</Text>
-            </TouchableOpacity>
+            <View style={{flexDirection: 'row', gap: 30}}>
+              <TouchableOpacity style={{width: '70%'}}>
+                <Text style={{ textAlign: 'right', textDecorationLine: 'underline' }}>Edit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text style={{ textAlign: 'right', textDecorationLine: 'underline' }}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -85,13 +90,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   text: {
+    width: '60%',
     gap: 10
   },
   crud: {
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#7F7F7F',
-    padding: 20,
-    marginBottom: 30
+    padding: 10,
+    marginBottom: 10
   }
 })

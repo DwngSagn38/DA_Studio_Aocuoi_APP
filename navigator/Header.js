@@ -1,7 +1,7 @@
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-const Header = ({navigation}) => {
+const Header = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -21,16 +21,17 @@ export default Header
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-      },
-      header: {
-        height: 60,
+    },
+    header: {
+        height: 66,
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 25,
-        marginTop: 10
-      },
-      icon: {
+        marginTop: 10,
+        alignItems: 'center'
+    },
+    icon: {
         width: 24,
         height: 24
-      },
+    },
 })

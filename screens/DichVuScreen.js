@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 
@@ -50,7 +50,7 @@ const DichVuScreen = ({navigation}) => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
+      <Pressable style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
@@ -58,7 +58,7 @@ const DichVuScreen = ({navigation}) => {
           <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 
