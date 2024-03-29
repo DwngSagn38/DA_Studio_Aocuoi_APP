@@ -3,7 +3,7 @@ import React from 'react'
 
 const ThongKeScreen = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>ThongKeScreen</Text>
     </View>
   )
@@ -11,4 +11,9 @@ const ThongKeScreen = () => {
 
 export default ThongKeScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 60
+  },
+})

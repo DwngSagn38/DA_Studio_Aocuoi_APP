@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
             ToastAndroid.show(data.msg, 0);
             // Lưu thông tin người dùng vào AsyncStorage
             try {
-                await AsyncStorage.setItem('userData', JSON.stringify(data.data));
+                await AsyncStorage.setItem('User', JSON.stringify(data.data));
                 // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
                 rememberAccount();
                 navigation.navigate('Main');
@@ -42,20 +42,22 @@ const LoginScreen = ({ navigation }) => {
         }
     }
 
+    // hàm checkremember
     const rememberAccount = async () => {
         try {
             if (remember) {
                 await AsyncStorage.setItem('username', user);
                 await AsyncStorage.setItem('password', pass);
             } else {
-                await AsyncStorage.removeItem('username');
-                await AsyncStorage.removeItem('password');
+                await AsyncStorage.setItem('username','');
+                await AsyncStorage.setItem('password','');
             }
         } catch (error) {
             console.error(error);
         }
     };
 
+    // hàm lấy thông tin từ asyncStorage
     const retrieveData = async () => {
         try {
             const storedUsername = await AsyncStorage.getItem('username');
@@ -64,6 +66,9 @@ const LoginScreen = ({ navigation }) => {
                 setuser(storedUsername);
                 setpass(storedPassword);
                 setremember(true);
+            }else{
+                setpass('');
+                setremember(false);
             }
         } catch (error) {
             console.error(error);

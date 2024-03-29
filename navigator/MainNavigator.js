@@ -11,6 +11,9 @@ import Profile from '../screens/Profile';
 import ManageUser from '../screens/ManageUser';
 import KhachHangScreen from '../screens/KhachHangScreen';
 import OptionMenu from '../screens/OptionMenu';
+import ListNhanVien from '../screens/ListNhanVien';
+import ThemNhanVien from '../screens/ThemNhanVien';
+import Header from './Header';
 
 
 
@@ -26,28 +29,28 @@ function Home() {
         }}>
             <Tab.Screen name='HomeScreen' component={HomeScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/home.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Dịch vụ' component={DichVuScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/dichvu.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Hóa đơn' component={HoaDonScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/hoadon.png')} tintColor={color} />
                 }} />
 
             <Tab.Screen name='Thống kê' component={ThongKeScreen}
                 options={{
-                    headerShown: false,
+                    header: Header,
                     tabBarIcon: ({ color, size }) => <Image style = {{width: 20, height: 20}}
                     source={require('../assets/image/thongke.png')} tintColor={color} />
                 }} />
@@ -65,6 +68,8 @@ const MainNavigator = () => {
             <Stack.Screen name='Profile' component={Profile} />
             <Stack.Screen name='ManageUser' component={ManageUser} />
             <Stack.Screen name='KhachHangScreen' component={KhachHangScreen} />
+            <Stack.Screen name='ThemNhanVien' component={ThemNhanVien} />
+            <Stack.Screen name='ListNhanVien' component={ListNhanVien} />
             <Stack.Screen name='OptionMenu' component={OptionMenu} />
         </Stack.Navigator>
     )

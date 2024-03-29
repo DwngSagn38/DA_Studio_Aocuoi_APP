@@ -1,7 +1,7 @@
 import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
-export const URL = 'http://192.168.100.3:3000';
+export const URL = 'http://192.168.0.125:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -25,7 +25,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={styles.card}>
+      <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
@@ -33,20 +33,11 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate('OptionMenu')}>
-          <Image source={require('../assets/image/menu.png')} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{navigation.navigate('Profile')}}>
-        <Image source={require('../assets/image/pesonal.png')} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         scrollEnabled={true}
       >
@@ -90,6 +81,7 @@ export default HomeScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 60
   },
   header: {
     height: 60,
