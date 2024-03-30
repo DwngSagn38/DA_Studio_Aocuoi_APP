@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ import OptionMenu from '../screens/OptionMenu';
 import ListNhanVien from '../screens/ListNhanVien';
 import ThemNhanVien from '../screens/ThemNhanVien';
 import Header from './Header';
+import CongViecScreen from '../screens/CongViecScreen';
 
 
 
@@ -72,6 +73,7 @@ const MainNavigator = () => {
             <Stack.Screen name='ThemNhanVien' component={ThemNhanVien} />
             <Stack.Screen name='ListNhanVien' component={ListNhanVien} />
             <Stack.Screen name='OptionMenu' component={OptionMenu} />
+            <Stack.Screen name='CongViecScreen' component={CongViecScreen} />
         </Stack.Navigator>
     )
 }

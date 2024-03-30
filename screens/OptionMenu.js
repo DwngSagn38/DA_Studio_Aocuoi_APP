@@ -26,18 +26,6 @@ const RenderItem = ({ icon, title, onPress }) => {
   );
 };
 
-// const retrieveData = async () => {
-//   try {
-//       const storedUsername = await AsyncStorage.getItem('username');
-//       const storedPassword = await AsyncStorage.getItem('password');
-//       if (storedUsername !== null && storedPassword !== null) {
-//         await AsyncStorage.setItem('username','');
-//         await AsyncStorage.setItem('password','');
-//       }
-//   } catch (error) {
-//       console.error(error);
-//   }
-// };
 
 const OptionMenu = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -48,15 +36,13 @@ const OptionMenu = ({ navigation }) => {
   const newData = {
     fullname: fullName,
     username: username,
-    password: password,
-    email: "", 
-    address:"", 
-    phone: "", 
-    ghiChu: "", 
-    trangThai:true,
-    avatar: "", 
-    role: 0 
+    password: password
   };
+  const restData = () => {
+    setFullName('')
+    setUsername('')
+    setPassword('')
+  }
   const saveNV = async () => {
     try {
       if (username === '' || fullName === '' || password === "") {
@@ -70,21 +56,17 @@ const OptionMenu = ({ navigation }) => {
           body: JSON.stringify(newData),
         });
         const data = await response.json();
- 
-          
-          if (data.status == 200) {
-            ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
-            setFullName('')
-            setUsername('')
-            setPassword('')
-            setModalVisible(!modalVisible);
-          } else if(data.status==400){
-            ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
-            setFullName('')
-            setUsername('')
-            setPassword('')
-          }
-         else {
+
+
+        if (data.status == 200) {
+          ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
+          restData()
+          setModalVisible(!modalVisible);
+        } else if (data.status == 400) {
+          ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
+          restData()
+        }
+        else {
           ToastAndroid.show('Username tồn tại', ToastAndroid.SHORT);
           console.log(data.message);
         }
@@ -95,9 +77,9 @@ const OptionMenu = ({ navigation }) => {
     }
   };
 
-  
-  
-  
+
+
+
 
   return (
     <View style={styles.container}>
@@ -123,7 +105,7 @@ const OptionMenu = ({ navigation }) => {
       <RenderItem
         icon={require("../assets/image/add_user2.png")}
         title={"Thêm nhân viên mới"}
-        onPress={() => setModalVisible(true)} 
+        onPress={() => setModalVisible(true)}
       />
       <RenderItem
         icon={require("../assets/image/gust.png")}
@@ -133,7 +115,7 @@ const OptionMenu = ({ navigation }) => {
       <RenderItem
         icon={require("../assets/image/job.png")}
         title={"Công việc"}
-        onPress={() => navigation.navigate("KhachHangScreen")}
+        onPress={() => navigation.navigate("CongViecScreen")}
       />
       <RenderItem
         icon={require("../assets/image/logout.png")}
@@ -198,12 +180,12 @@ const OptionMenu = ({ navigation }) => {
                     width: "100%",
                   }}
                   value={fullName}
-                  onChangeText={(txt)=>setFullName(txt)}
+                  onChangeText={(txt) => setFullName(txt)}
                   placeholder="Họ tên nhân viên"
                 />
                 <TextInput
-                value={username}
-                onChangeText={(txt)=>setUsername(txt)}
+                  value={username}
+                  onChangeText={(txt) => setUsername(txt)}
                   style={{
                     padding: 10,
                     borderRadius: 10,
@@ -213,8 +195,8 @@ const OptionMenu = ({ navigation }) => {
                   placeholder="Username"
                 />
                 <TextInput
-                value={password}
-                onChangeText={(txt)=>setPassword(txt)}
+                  value={password}
+                  onChangeText={(txt) => setPassword(txt)}
                   style={{
                     padding: 10,
                     borderRadius: 10,
@@ -228,15 +210,16 @@ const OptionMenu = ({ navigation }) => {
             <View style={{ flexDirection: "row" }}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() =>{setModalVisible(!modalVisible),  setFullName(''),
-                setUsername(''),
-                setPassword('')}}
+                onPress={() => {
+                  setModalVisible(!modalVisible),
+                  restData()
+                }}
               >
                 <Text style={styles.textStyle}>Cancel</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => {saveNV()}}
+                onPress={() => { saveNV() }}
               >
                 <Text style={styles.textStyle}>Save</Text>
               </Pressable>
@@ -301,5 +284,8 @@ const styles = StyleSheet.create({
     width: 100,
     margin: 10,
     alignItems: "center",
+  },
+  textStyle: {
+    color: 'white'
   },
 });

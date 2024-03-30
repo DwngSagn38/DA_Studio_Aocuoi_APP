@@ -6,8 +6,6 @@ const DichVuChiTiet = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor={'rgba(0,0,0,0)'} />
-
       <View style={{ height: '70%' }}>
         <ImageBackground style={{ width: '100%', height: '100%', justifyContent: 'space-between' }} resizeMode='cover'
           source={{
