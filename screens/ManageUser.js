@@ -43,9 +43,9 @@ const ManageUser = ({ navigation, route }) => {
       </View>
       <View style={styles.textInput}>
         <TextInput style={styles.input} placeholder={User.fullname} onChangeText={(txt) => setFullname(txt)} />
-        <TextInput style={styles.input} placeholder={User.email != null ? User.email : 'Email'} onChangeText={(txt) => setEmail(txt)} />
-        <TextInput style={styles.input} placeholder={User.address != null ? User.address : 'Address'} onChangeText={(txt) => setAddress(txt)} />
-        <TextInput style={styles.input} placeholder={User.phone != null ? User.phone : 'Number phone'} onChangeText={(txt) => setPhone(txt)} />
+        <TextInput style={styles.input} placeholder={ User.email || 'Email'} onChangeText={(txt) => setEmail(txt)} />
+        <TextInput style={styles.input} placeholder={ User.address || 'Address'} onChangeText={(txt) => setAddress(txt)} />
+        <TextInput style={styles.input} placeholder={ User.phone || 'Number phone'} onChangeText={(txt) => setPhone(txt)} />
       </View>
       <TouchableOpacity onPress={PickImage}
         style={styles.button}>
