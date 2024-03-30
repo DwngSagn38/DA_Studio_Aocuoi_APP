@@ -25,11 +25,19 @@ const LoginScreen = ({ navigation }) => {
             })
         const data = await res.json();
         if (res.status != 200) {
-            ToastAndroid.show(data.msg, 0);
+            if (Platform.OS === 'ios') {
+                Alert.alert(data.msg);
+            } else {
+                ToastAndroid.show(data.msg, 0);
+            }
             return;
         }
         if (data.status == 200) {
-            ToastAndroid.show(data.msg, 0);
+            if (Platform.OS === 'ios') {
+                Alert.alert(data.msg);
+            } else {
+                ToastAndroid.show(data.msg, 0);
+            }
             // Lưu thông tin người dùng vào AsyncStorage
             try {
                 await AsyncStorage.setItem('User', JSON.stringify(data.data));
@@ -49,8 +57,8 @@ const LoginScreen = ({ navigation }) => {
                 await AsyncStorage.setItem('username', user);
                 await AsyncStorage.setItem('password', pass);
             } else {
-                await AsyncStorage.setItem('username','');
-                await AsyncStorage.setItem('password','');
+                await AsyncStorage.setItem('username', '');
+                await AsyncStorage.setItem('password', '');
             }
         } catch (error) {
             console.error(error);
@@ -66,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
                 setuser(storedUsername);
                 setpass(storedPassword);
                 setremember(true);
-            }else{
+            } else {
                 setpass('');
                 setremember(false);
             }

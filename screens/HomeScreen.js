@@ -1,5 +1,6 @@
-import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import SlideShow from '../component/SlideShow';
 
 export const URL = 'http://192.168.0.125:3000';
 
@@ -25,7 +26,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderItem = ({ item, index }) => {
     return (
-      <TouchableOpacity style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
+      <Pressable style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
@@ -33,7 +34,7 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     )
   }
   return (
@@ -43,8 +44,9 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.viewSt}>
           <Text style={styles.title}>Chào ngày mới</Text>
-          <Image source={{ uri: "https://i.pinimg.com/236x/ec/0a/dc/ec0adceb46869873ae79525b369c619f.jpg" }}
-            style={{ width: '100%', height: 300 }} resizeMode='repeat' />
+          {/* <Image source={{ uri: "https://i.pinimg.com/236x/ec/0a/dc/ec0adceb46869873ae79525b369c619f.jpg" }}
+            style={{ width: '100%', height: 300 }} resizeMode='repeat' /> */}
+          <SlideShow/>
         </View>
 
         <View style={[styles.viewSt, { alignItems: 'center' }]}>
@@ -109,11 +111,11 @@ const styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOffset: {
       width: 0,
-      height: 10
+      height: 4
     },
-    shadowRadius: 20,
-    shadowOpacity: 0.4,
-    elevation: 9
+    shadowRadius: 6,
+    shadowOpacity: 0.25,
+    elevation: 6
   },
   cardImg: {
     width: '100%',

@@ -50,11 +50,11 @@ const ListNhanVien = ({ navigation }) => {
                         setGhichu(item.ghiChu)
                 }}>
                 <Image style={{ width: 120, height: 120, borderRadius: 10 }}
-                    source={item.avatar != null ? { uri: item.avatar } : require('../assets/image/pesonal.png')} />
+                    source={item.avatar ? { uri: item.avatar } : require('../assets/image/pesonal.png')} />
                 <View style={styles.text}>
                     <Text style={{ fontWeight: 'bold' }}>{item.fullname}</Text>
-                    <Text>ĐC: {item.address != null ? item.address : 'chưa thêm'}</Text>
-                    <Text>SĐT: {item.phone != null ? item.phone : 'chưa thêm'}</Text>
+                    <Text>ĐC: {item.address ? item.address : 'chưa thêm'}</Text>
+                    <Text>SĐT: {item.phone ? item.phone : 'chưa thêm'}</Text>
                     {item.trangThai
                         ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
                         : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
