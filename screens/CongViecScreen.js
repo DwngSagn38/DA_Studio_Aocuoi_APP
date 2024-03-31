@@ -309,7 +309,7 @@ const CongViecScreen = ({ navigation }) => {
                             {showPicker &&
                                 <DateTimePicker
                                     mode="date"
-                                    display='calendar'
+                                    display='spinner'
                                     value={date}
                                     onChange={onChange}
                                     // minimumDate={new Date()}

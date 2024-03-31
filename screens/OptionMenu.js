@@ -29,6 +29,7 @@ const RenderItem = ({ icon, title, onPress }) => {
 
 const OptionMenu = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [dangXuatModal, setdangXuatModal] = useState(false)
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
@@ -57,17 +58,17 @@ const OptionMenu = ({ navigation }) => {
           body: JSON.stringify(newData),
         });
         const data = await response.json();
- 
-          
-          if (data.status == 200) {
-            ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
-            resetData()
-            setModalVisible(!modalVisible);
-          } else if(data.status==400){
-            ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
-            resetData()
-          }
-         else {
+
+
+        if (data.status == 200) {
+          ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
+          resetData()
+          setModalVisible(!modalVisible);
+        } else if (data.status == 400) {
+          ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
+          resetData()
+        }
+        else {
           ToastAndroid.show('Username tồn tại', ToastAndroid.SHORT);
           console.log(data.message);
         }
@@ -78,9 +79,6 @@ const OptionMenu = ({ navigation }) => {
     }
   };
 
-  
-  
-  
 
   return (
     <View style={styles.container}>
@@ -106,7 +104,7 @@ const OptionMenu = ({ navigation }) => {
       <RenderItem
         icon={require("../assets/image/add_user2.png")}
         title={"Thêm nhân viên mới"}
-        onPress={() => setModalVisible(true)} 
+        onPress={() => setModalVisible(true)}
       />
       <RenderItem
         icon={require("../assets/image/gust.png")}
@@ -121,7 +119,10 @@ const OptionMenu = ({ navigation }) => {
       <RenderItem
         icon={require("../assets/image/logout.png")}
         title={"Đăng xuất"}
-        onPress={() => navigation.navigate("LoginScreen")}
+        onPress={() => {
+          setdangXuatModal(true)
+          
+        }}
       />
 
       {/* Dialog add nhân viên */}
@@ -181,12 +182,12 @@ const OptionMenu = ({ navigation }) => {
                     width: "100%",
                   }}
                   value={fullName}
-                  onChangeText={(txt)=>setFullName(txt)}
+                  onChangeText={(txt) => setFullName(txt)}
                   placeholder="Họ tên nhân viên"
                 />
                 <TextInput
-                value={username}
-                onChangeText={(txt)=>setUsername(txt)}
+                  value={username}
+                  onChangeText={(txt) => setUsername(txt)}
                   style={{
                     padding: 10,
                     borderRadius: 10,
@@ -196,8 +197,8 @@ const OptionMenu = ({ navigation }) => {
                   placeholder="Username"
                 />
                 <TextInput
-                value={password}
-                onChangeText={(txt)=>setPassword(txt)}
+                  value={password}
+                  onChangeText={(txt) => setPassword(txt)}
                   style={{
                     padding: 10,
                     borderRadius: 10,
@@ -211,15 +212,17 @@ const OptionMenu = ({ navigation }) => {
             <View style={{ flexDirection: "row" }}>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() =>{setModalVisible(!modalVisible),  setFullName(''),
-                setUsername(''),
-                setPassword('')}}
+                onPress={() => {
+                  setModalVisible(!modalVisible), setFullName(''),
+                    setUsername(''),
+                    setPassword('')
+                }}
               >
                 <Text style={styles.textStyle}>Cancel</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => {saveNV()}}
+                onPress={() => { saveNV() }}
               >
                 <Text style={styles.textStyle}>Save</Text>
               </Pressable>
@@ -227,7 +230,44 @@ const OptionMenu = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+
+
+      <Modal
+        animationType='slide'
+        transparent={true}
+        visible={dangXuatModal}
+      >
+        <View style={styles.cardCotainer}>
+          <View style={styles.cardModal}>
+            <Text style={styles.textModal}>
+              Bạn có chắc chắn muốn đăng xuất không?
+            </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Pressable style={[styles.button, styles.buttonClose]}
+                onPress={() => {
+                  setdangXuatModal(!dangXuatModal)
+                }}>
+
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => { {
+                  setdangXuatModal(!dangXuatModal)
+                  navigation.navigate('LoginScreen')
+                }
+                  
+
+                }
+                }>
+                <Text style={styles.textStyle}>Submit</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
+
   );
 };
 
@@ -285,7 +325,31 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: "center",
   },
-  textStyle:{
+  textStyle: {
     color: 'white'
-},
+  },
+  cardCotainer: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  cardModal: {
+    width: "90%",
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  textModal: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  },
 });
