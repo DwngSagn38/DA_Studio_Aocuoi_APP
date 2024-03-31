@@ -12,8 +12,9 @@ const DichVuChiTiet = ({ navigation, route }) => {
             uri: item.hinhAnh
           }}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => { navigation.goBack() }}>
-              <Image source={require('../assets/image/back.png')} style={styles.icon} />
+            <TouchableOpacity style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 4 }}
+              onPress={() => { navigation.goBack() }}>
+              <Image source={require('../assets/image/back.png')} style={styles.icon} tintColor={'gray'} />
             </TouchableOpacity>
             <Text style={styles.title}>{item.tenDichVu}</Text>
             <View />
@@ -34,7 +35,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
         height: '23%', marginBottom: '1%',
         padding: 20
       }}>
-        <ScrollView style={{height: 150, gap: 12}}>
+        <ScrollView style={{ height: 150, gap: 12 }}>
           <Text style={{ fontSize: 15, fontWeight: '700' }}>Mô tả</Text>
           <Text>{item.moTa}</Text>
         </ScrollView>
@@ -53,10 +54,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 30, marginBottom: 10, paddingHorizontal: 20 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 30, marginBottom: 10, paddingHorizontal: 20 },
   icon: {
-    width: 24,
-    height: 24
+    width: 20,
+    height: 20
   },
   title: {
     fontSize: 16,

@@ -28,18 +28,25 @@ const LoginScreen = ({ navigation }) => {
             ToastAndroid.show(data.msg, 0);
             return;
         }
-        if (data.status == 200) {
-            ToastAndroid.show(data.msg, 0);
-            // Lưu thông tin người dùng vào AsyncStorage
-            try {
-                await AsyncStorage.setItem('User', JSON.stringify(data.data));
-                // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
-                rememberAccount();
-                navigation.navigate('Main');
-            } catch (error) {
-                console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
+        else{
+            if (data.status == 200) {
+                if(data.data.block){
+                    ToastAndroid.show('Tài khoản đã bị khoá',0)
+                }else{
+                    ToastAndroid.show(data.msg, 0);
+                // Lưu thông tin người dùng vào AsyncStorage
+                try {
+                    await AsyncStorage.setItem('User', JSON.stringify(data.data));
+                    // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
+                    rememberAccount();
+                    navigation.navigate('Main');
+                } catch (error) {
+                    console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
+                }
+                }
             }
         }
+        
     }
 
     // hàm checkremember

@@ -36,9 +36,10 @@ const OptionMenu = ({ navigation }) => {
   const newData = {
     fullname: fullName,
     username: username,
-    password: password
+    password: password,
   };
-  const restData = () => {
+
+  const resetData = () => {
     setFullName('')
     setUsername('')
     setPassword('')
@@ -56,17 +57,17 @@ const OptionMenu = ({ navigation }) => {
           body: JSON.stringify(newData),
         });
         const data = await response.json();
-
-
-        if (data.status == 200) {
-          ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
-          restData()
-          setModalVisible(!modalVisible);
-        } else if (data.status == 400) {
-          ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
-          restData()
-        }
-        else {
+ 
+          
+          if (data.status == 200) {
+            ToastAndroid.show('Thêm nhân viên thành công', ToastAndroid.SHORT);
+            resetData()
+            setModalVisible(!modalVisible);
+          } else if(data.status==400){
+            ToastAndroid.show('Thêm nhân viên thất bại', ToastAndroid.SHORT);
+            resetData()
+          }
+         else {
           ToastAndroid.show('Username tồn tại', ToastAndroid.SHORT);
           console.log(data.message);
         }

@@ -40,7 +40,7 @@ const Profile = ({ navigation }) => {
 
         <Text>
           <Text style={{ fontSize: 17, fontWeight: 'bold' }}>{User.fullname}</Text>{'\n'}
-          <Text style={{ textDecorationLine: 'underline' }}>{User.email != null ? User.email : 'Chưa xác thực email'}</Text>
+          <Text style={{ textDecorationLine: 'underline' }}>{User.email || 'Chưa xác thực email'}</Text>
         </Text>
       </View>
 

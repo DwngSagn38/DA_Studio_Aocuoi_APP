@@ -7,7 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const CongViecScreen = ({ navigation }) => {
     const [showPicker, setshowPicker] = useState(false);
     const [date, setdate] = useState(new Date());
-    const [checkForm, setcheckForm] = useState(true)
+    const [checkForm, setcheckForm] = useState(true);
 
     const [listCongViec, setlistCongViec] = useState([]);
     const [ListNhanVien, setListNhanVien] = useState([]);
@@ -112,12 +112,12 @@ const CongViecScreen = ({ navigation }) => {
         const urlAdd = `${URL}/congviecs/add`;
         const urlUp = `${URL}/congviecs/update/${idItem}`;
 
-        if(idNhanVien == ''){
-            ToastAndroid.show('Vui lòng chọn nhân viên',0);
+        if (idNhanVien == '') {
+            ToastAndroid.show('Vui lòng chọn nhân viên', 0);
             return;
         }
-        if( tenCongViec == '' || fromDate == '' || toDate == ''){
-            ToastAndroid.show('Không được để trống',0);
+        if (tenCongViec == '' || fromDate == '' || toDate == '') {
+            ToastAndroid.show('Không được để trống', 0);
             return;
         }
 
@@ -133,22 +133,22 @@ const CongViecScreen = ({ navigation }) => {
         const method = checkAdd ? 'POST' : 'PUT';
         const linkAPI = checkAdd ? urlAdd : urlUp;
 
-        const res = await fetch(linkAPI,{
+        const res = await fetch(linkAPI, {
             method: method,
             body: JSON.stringify(NewCongViec),
             headers: {
                 'Content-Type': 'application/json'
-              }
+            }
         });
 
         const data = await res.json();
         console.log(data);
-        if(data.status === 200){
-            ToastAndroid.show(data.msg,0);
+        if (data.status === 200) {
+            ToastAndroid.show(data.msg, 0);
             setAddVisible(!AddVisible)
             getData();
-        }else{
-            ToastAndroid.show(data.msg,0)
+        } else {
+            ToastAndroid.show(data.msg, 0)
         }
     }
 
@@ -181,6 +181,12 @@ const CongViecScreen = ({ navigation }) => {
                                 <Text style={styles.textStyle}>Delete</Text>
                             </Pressable>
                         </View>
+
+                        <TouchableOpacity style={{ position: 'absolute', right: 20, top: 20 }}
+                            onPress={() => setoptionVisible(false)}>
+                            <Image style={styles.icon}
+                                source={require('../assets/image/cancel.png')} />
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
@@ -263,7 +269,10 @@ const CongViecScreen = ({ navigation }) => {
                         source={require('../assets/image/back.png')} />
                 </TouchableOpacity>
                 <Text style={{ marginLeft: 20, fontSize: 18, fontWeight: 'bold' }}>Danh sách công việc</Text>
-                <View />
+                <TouchableOpacity onPress={() => { setAddVisible(true), resetInput(), setcheckAdd(true) }}>
+                    <Image style={styles.icon}
+                        source={require('../assets/image/addjob.png')} />
+                </TouchableOpacity>
             </View>
 
             <FlatList
@@ -271,10 +280,6 @@ const CongViecScreen = ({ navigation }) => {
                 keyExtractor={item => item._id}
                 renderItem={renderItem}></FlatList>
 
-            <TouchableOpacity onPress={() => { setAddVisible(true), resetInput(), setcheckAdd(true) }}
-                style={styles.btnAdd}>
-                <Image source={require('../assets/image/add.png')} style={styles.icon} />
-            </TouchableOpacity>
             <OptionModal />
             <ModalDelete />
             <Modal animationType='slide'
@@ -293,7 +298,7 @@ const CongViecScreen = ({ navigation }) => {
                                     selectedValue={idNhanVien}
                                     onValueChange={(itemValue, itemIndex) => setidNhanVien(itemValue)}>
                                     <Picker.Item label='Chọn nhân viên' value='' />
-                                    {ListNhanVien.filter(nv=> nv.role == 0).map((nv) => (
+                                    {ListNhanVien.filter(nv => nv.role == 0).map((nv) => (
                                         <Picker.Item key={nv._id} label={nv.fullname} value={nv._id} />
                                     ))}
                                 </Picker>
@@ -323,11 +328,11 @@ const CongViecScreen = ({ navigation }) => {
                             )}
 
 
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', gap: 10}}>
-                                <View style={{flex: 1}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
+                                <View style={{ flex: 1 }}>
                                     <Text>Form Date</Text>
                                     {!showPicker && (
-                                        <Pressable onPress={()=>{toggleDatePicker(),setcheckForm(true)}}>
+                                        <Pressable onPress={() => { toggleDatePicker(), setcheckForm(true) }}>
                                             <TextInput
                                                 placeholder='Date'
                                                 onChangeText={(txt) => setfromDate(txt)}
@@ -339,10 +344,10 @@ const CongViecScreen = ({ navigation }) => {
                                     )}
                                 </View>
 
-                                <View style={{flex: 1}}>
+                                <View style={{ flex: 1 }}>
                                     <Text>To Date</Text>
                                     {!showPicker && (
-                                        <Pressable onPress={()=>{toggleDatePicker(),setcheckForm(false)}}>
+                                        <Pressable onPress={() => { toggleDatePicker(), setcheckForm(false) }}>
                                             <TextInput
                                                 placeholder='Date'
                                                 onChangeText={(txt) => settoDate(txt)}
@@ -377,7 +382,7 @@ const CongViecScreen = ({ navigation }) => {
                             </Pressable>
                             <Pressable
                                 style={[styles.button]}
-                                onPress={() => {  addCongViec() }}>
+                                onPress={() => { addCongViec() }}>
                                 <Text style={styles.textStyle}>Save</Text>
                             </Pressable>
                         </View>
