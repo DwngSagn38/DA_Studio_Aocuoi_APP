@@ -79,7 +79,6 @@ const OptionMenu = ({ navigation }) => {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -213,9 +212,8 @@ const OptionMenu = ({ navigation }) => {
               <Pressable
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => {
-                  setModalVisible(!modalVisible), setFullName(''),
-                    setUsername(''),
-                    setPassword('')
+                  setModalVisible(!modalVisible),
+                  resetData()
                 }}
               >
                 <Text style={styles.textStyle}>Cancel</Text>

@@ -7,7 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const CongViecScreen = ({ navigation }) => {
     const [showPicker, setshowPicker] = useState(false);
     const [date, setdate] = useState(new Date());
-    const [checkForm, setcheckForm] = useState(true)
+    const [checkForm, setcheckForm] = useState(true);
 
     const [listCongViec, setlistCongViec] = useState([]);
     const [ListNhanVien, setListNhanVien] = useState([]);
@@ -182,8 +182,8 @@ const CongViecScreen = ({ navigation }) => {
                             </Pressable>
                         </View>
 
-                        <TouchableOpacity style={{position:'absolute', right: 20, top: 20}}
-                         onPress={() => setoptionVisible(false)}>
+                        <TouchableOpacity style={{ position: 'absolute', right: 20, top: 20 }}
+                            onPress={() => setoptionVisible(false)}>
                             <Image style={styles.icon}
                                 source={require('../assets/image/cancel.png')} />
                         </TouchableOpacity>

@@ -33,6 +33,12 @@ const LoginScreen = ({ navigation }) => {
             return;
         }
         if (data.status == 200) {
+            if(data.data.block){
+                if(Platform.OS==='ios'){
+                    return Alert.alert('Tài khoản bị khoá')
+                }
+                return ToastAndroid.show('Tài khoản bị khoá',0)
+            }
             if (Platform.OS === 'ios') {
                 Alert.alert(data.msg);
             } else {
@@ -48,6 +54,7 @@ const LoginScreen = ({ navigation }) => {
                 console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
             }
         }
+        
     }
 
     // hàm checkremember

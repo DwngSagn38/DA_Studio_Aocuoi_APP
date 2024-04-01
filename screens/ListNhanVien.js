@@ -1,10 +1,11 @@
-import { FlatList, Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Modal, Pressable, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 
 const ListNhanVien = ({ navigation }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalBlock, setModalBlock] = useState(false);
     const [data, setdata] = useState([]);
     const [idNhanVien, setidNhanVien] = useState('');
     const [Fullname, setFullname] = useState('');
@@ -14,8 +15,65 @@ const ListNhanVien = ({ navigation }) => {
     const [TrangThai, setTrangThai] = useState(false);
     const [Avatar, setAvatar] = useState('');
     const [Ghichu, setGhichu] = useState('');
+    const [block, setBlock] = useState(false);
 
 
+
+    const BlockUser = () => {
+        return (
+            <Modal style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
+                animationType="slide"
+                transparent={true}
+                visible={modalBlock}
+                onRequestClose={() => {
+                    setModalBlock(!modalBlock);
+                }}>
+                <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+                    <View style={{ width: '90%', margin: 20, backgroundColor: 'white', borderRadius: 20, padding: 25, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, }}>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>Bạn muốn {block?'unblock':'block'} tài khoản này?</Text>
+                        <View style={[{ marginTop: 10, width: '100%', gap: 9 }]}>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            {block ? <Pressable
+                                style={[styles.button, { backgroundColor: 'green' }]}
+                                onPress={() => {handleBlock(idNhanVien),setModalBlock(!modalBlock),getListNV()}}>
+                                 <Text style={styles.textStyle}>Có</Text>
+                            </Pressable> : <Pressable
+                                style={[styles.button, { backgroundColor: 'red' }]}
+                                onPress={() => {handleBlock(idNhanVien),setModalBlock(!modalBlock),getListNV()}}>
+                                <Text style={styles.textStyle}>Có</Text>
+                            </Pressable>}
+
+                            
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalBlock(!modalBlock)}>
+                                <Text style={styles.textStyle}>Không</Text>
+                            </Pressable></View>
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    const handleBlock = async (idNhanVien) => {
+        const actions = block ? 'unblock' : 'block';
+
+        const reponse = await fetch(`${URL}/nhanviens/${actions}/${idNhanVien}`,{
+            method:'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({block:!block})
+        })
+        const data = await reponse.json();
+        if(data.status!==200){
+            ToastAndroid.show('Lỗi')
+        }else{
+            ToastAndroid.show(data.msg,0)
+            setBlock(!block)
+        }
+    }
 
     const getListNV = async () => {
         const url = `${URL}/nhanviens`;
@@ -47,7 +105,8 @@ const ListNhanVien = ({ navigation }) => {
                         setEmail(item.email),
                         setPhone(item.phone),
                         setTrangThai(item.trangThai),
-                        setGhichu(item.ghiChu)
+                        setGhichu(item.ghiChu),
+                        setBlock(item.block)
                 }}>
                 <Image style={{ width: 120, height: 120, borderRadius: 10 }}
                     source={item.avatar ? { uri: item.avatar } : require('../assets/image/pesonal.png')} />
@@ -56,8 +115,8 @@ const ListNhanVien = ({ navigation }) => {
                     <Text>ĐC: {item.address ? item.address : 'chưa thêm'}</Text>
                     <Text>SĐT: {item.phone ? item.phone : 'chưa thêm'}</Text>
                     {item.trangThai
-                        ? <Text style={{ color: '#4CAF50' }}>Đang làm</Text>
-                        : <Text style={{ color: '#FF0505' }}>Nghỉ làm</Text>}
+                        ? <Text style={{ color: '#4CAF50', fontWeight: 'bold' }}>Đang làm</Text>
+                        : <Text style={{ color: '#FF0505', fontWeight: 'bold' }}>Nghỉ làm</Text>}
                 </View>
             </TouchableOpacity>
         )
@@ -79,7 +138,7 @@ const ListNhanVien = ({ navigation }) => {
                 keyExtractor={item => item._id}
                 renderItem={renderItem}></FlatList>
 
-
+            <BlockUser />
             <Modal style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
                 animationType="slide"
                 transparent={true}
@@ -105,11 +164,21 @@ const ListNhanVien = ({ navigation }) => {
 
                         </View>
 
-                        <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <Text style={styles.textStyle}>Quay lại</Text>
-                        </Pressable>
+                        <View style={{ flexDirection: 'row' }}>
+                            {block ? <Pressable
+                                style={[styles.button, { backgroundColor: 'green' }]}
+                                onPress={() => setModalBlock(!modalBlock)}>
+                                {block ? <Text style={styles.textStyle}>Unlock</Text> : <Text style={styles.textStyle}>Block</Text>}
+                            </Pressable> : <Pressable
+                                style={[styles.button, { backgroundColor: 'red' }]}
+                                onPress={() => setModalBlock(!modalBlock)}>
+                                {block ? <Text style={styles.textStyle}>Unlock</Text> : <Text style={styles.textStyle}>Block</Text>}
+                            </Pressable>}
+                            <Pressable
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(!modalVisible)}>
+                                <Text style={styles.textStyle}>Quay lại</Text>
+                            </Pressable></View>
                     </View>
                 </View>
             </Modal>
@@ -148,7 +217,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         elevation: 2,
-        marginTop: 10
+        width: 100,
+        marginTop: 10,
+        marginHorizontal: 10,
     }, textStyle: {
         color: 'white',
         fontWeight: 'bold',
