@@ -1,10 +1,110 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { URL } from './HomeScreen';
 
-const HoaDonScreen = () => {
+const HoaDonScreen = ({ navigation }) => {
+  const [loading, setloading] = useState(true);
+
+  const [ListHoaDon, setListHoaDon] = useState([]);
+  const [ListTrangThai, setListTrangThai] = useState([]);
+  const [ListKhachHang, setListKhachHang] = useState([]);
+  const [trangThai, settrangThai] = useState('2');
+
+  const getData = async () => {
+    const url = `${URL}/hoadons`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setListHoaDon(data);
+      if (trangThai != '' || trangThai == 0) {
+        const list = ListHoaDon.filter((hd) => hd.trangThai == trangThai);
+        setListTrangThai(list);
+      }
+      setloading(false)
+      console.log(list);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getKhachHangs = async () => {
+    const url = `${URL}/khachhangs`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setListKhachHang(data);
+      setloading(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+    getKhachHangs();
+  }, [navigation, trangThai])
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
+
+    // Trả về ngày được định dạng là yyyy-MM-dd
+    return `${year}-${month}-${day}`;
+  }
+
+  const renderItem = ({ item }) => {
+
+    const khachhang = ListKhachHang.find((kh) => kh._id === item.id_KhachHang);
+    console.log(khachhang);
+    return (
+      <View style={[styles.card, {
+        borderColor: item.trangThai === 0 ? 'red' : (item.trangThai === 1 ? 'green' : 'gray'),
+        backgroundColor: item.trangThai === -1 ? 'gray' : 'white'
+      }]}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>{khachhang?.tenKhachHang}</Text>
+        <Text>Tổng tiền : {item.tongTien} đ - -
+          Ngày : {formatDate(item.ngayMua)}</Text>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
-      <Text>HoaDonScreen</Text>
+      <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>Danh sách hóa đơn</Text>
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
+        <Pressable onPress={() => settrangThai(2)}
+          style={[styles.btn]}>
+          <Text>All</Text>
+        </Pressable>
+        <Pressable onPress={() => settrangThai(1)}
+          style={[styles.btn, { borderColor: 'green' }]}>
+          <Text>Hoàn Thành</Text>
+        </Pressable>
+        <Pressable onPress={() => settrangThai(0)}
+          style={[styles.btn, { borderColor: 'red' }]}>
+          <Text>Đang chờ</Text>
+        </Pressable>
+        <Pressable onPress={() => settrangThai(-1)}
+          style={[styles.btn, { backgroundColor: 'gray' }]}>
+          <Text>Đã hủy</Text>
+        </Pressable>
+      </View>
+      {loading ? <ActivityIndicator color={'black'} />
+        :
+        <FlatList
+          data={ListTrangThai.length > 0 ? ListTrangThai : ListHoaDon}
+          keyExtractor={item => item._id}
+          renderItem={renderItem}></FlatList>}
     </View>
   )
 }
@@ -16,4 +116,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 60
   },
+  card: { marginTop: 10, padding: 20, borderWidth: 2, borderRadius: 8, width: '94%', marginHorizontal: 12, },
+  btn: { padding: 10, borderWidth: 1, borderRadius: 10 },
 })
