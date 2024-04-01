@@ -25,25 +25,33 @@ const LoginScreen = ({ navigation }) => {
             })
         const data = await res.json();
         if (res.status != 200) {
-            ToastAndroid.show(data.msg, 0);
+            if (Platform.OS === 'ios') {
+                Alert.alert(data.msg);
+            } else {
+                ToastAndroid.show(data.msg, 0);
+            }
             return;
         }
-        else{
-            if (data.status == 200) {
-                if(data.data.block){
-                    ToastAndroid.show('Tài khoản đã bị khoá',0)
-                }else{
-                    ToastAndroid.show(data.msg, 0);
-                // Lưu thông tin người dùng vào AsyncStorage
-                try {
-                    await AsyncStorage.setItem('User', JSON.stringify(data.data));
-                    // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
-                    rememberAccount();
-                    navigation.navigate('Main');
-                } catch (error) {
-                    console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
+        if (data.status == 200) {
+            if(data.data.block){
+                if(Platform.OS==='ios'){
+                    return Alert.alert('Tài khoản bị khoá')
                 }
-                }
+                return ToastAndroid.show('Tài khoản bị khoá',0)
+            }
+            if (Platform.OS === 'ios') {
+                Alert.alert(data.msg);
+            } else {
+                ToastAndroid.show(data.msg, 0);
+            }
+            // Lưu thông tin người dùng vào AsyncStorage
+            try {
+                await AsyncStorage.setItem('User', JSON.stringify(data.data));
+                // Điều hướng đến màn hình chính sau khi lưu thông tin thành công
+                rememberAccount();
+                navigation.navigate('Main');
+            } catch (error) {
+                console.error('Lỗi khi lưu thông tin người dùng vào AsyncStorage:', error);
             }
         }
         
@@ -56,8 +64,8 @@ const LoginScreen = ({ navigation }) => {
                 await AsyncStorage.setItem('username', user);
                 await AsyncStorage.setItem('password', pass);
             } else {
-                await AsyncStorage.setItem('username','');
-                await AsyncStorage.setItem('password','');
+                await AsyncStorage.setItem('username', '');
+                await AsyncStorage.setItem('password', '');
             }
         } catch (error) {
             console.error(error);
@@ -73,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
                 setuser(storedUsername);
                 setpass(storedPassword);
                 setremember(true);
-            }else{
+            } else {
                 setpass('');
                 setremember(false);
             }
