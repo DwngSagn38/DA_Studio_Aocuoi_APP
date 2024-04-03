@@ -2,7 +2,7 @@ import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text,
 import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 
-export const URL = 'http://192.168.100.3:3000';
+export const URL = 'http://10.24.48.204:3000';
 
 const HomeScreen = ({ navigation }) => {
 
