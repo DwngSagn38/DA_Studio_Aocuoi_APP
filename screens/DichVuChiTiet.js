@@ -1,12 +1,15 @@
 import { Image, ImageBackground, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DichVuChiTiet = ({ navigation, route }) => {
   const { item } = route.params;
+  const [User, setUser] = useState([]);
   const [idItem, setidItem] = useState(item?._id);
   const [optionVisible, setoptionVisible] = useState(false);
   const [DeleteVisible, setDeleteVisible] = useState(false);
+  const [checkAdd, setcheckAdd] = useState(true);
 
   // modal option
   const OptionModal = () => {
@@ -32,7 +35,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
               </Pressable>
               <Pressable
                 style={[styles.button]}
-                onPress={() => { setoptionVisible(false),setDeleteVisible(true) }}>
+                onPress={() => { setoptionVisible(false), setDeleteVisible(true) }}>
                 <Text style={styles.textStyle}>Delete</Text>
               </Pressable>
             </View>
@@ -48,54 +51,123 @@ const DichVuChiTiet = ({ navigation, route }) => {
     )
   }
 
-      //modal delete
-      const ModalDelete = () => {
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={DeleteVisible}>
-                <View
-                    style={styles.cardCotainer}>
-                    <View style={styles.cardModal}>
-                        <Text style={styles.textModal}>
-                            Bạn có chắc chắn muốn xóa không?
-                        </Text>
+  //modal delete
+  const ModalDelete = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={DeleteVisible}>
+        <View
+          style={styles.cardCotainer}>
+          <View style={styles.cardModal}>
+            <Text style={styles.textModal}>
+              Bạn có chắc chắn muốn xóa không?
+            </Text>
 
-                        <View style={{ flexDirection: "row" }}>
-                            <Pressable
-                                style={[styles.button]}
-                                onPress={() => {
-                                    setDeleteVisible(!DeleteVisible)
-                                }}>
-                                <Text style={styles.textStyle}>Không</Text>
-                            </Pressable>
-                            <Pressable
-                                style={[styles.button]}
-                                onPress={() => { setDeleteVisible(!DeleteVisible), deleteDichVu(), navigation.goBack() }}>
-                                <Text style={styles.textStyle}>Đồng ý</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-        )
+            <View style={{ flexDirection: "row" }}>
+              <Pressable
+                style={[styles.button]}
+                onPress={() => {
+                  setDeleteVisible(!DeleteVisible)
+                }}>
+                <Text style={styles.textStyle}>Không</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button]}
+                onPress={() => { setDeleteVisible(!DeleteVisible), deleteDichVu(), navigation.goBack() }}>
+                <Text style={styles.textStyle}>Đồng ý</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+
+  // lấy user từ AsyncStorage
+  const retrieveData = async () => {
+    try {
+      const UserData = await AsyncStorage.getItem('User');
+      if (UserData != null) {
+        setUser(JSON.parse(UserData));
+      }
+    } catch (error) {
+      console.log(error);
     }
+  }
 
   const deleteDichVu = async () => {
     const url = `${URL}/dichvus/delete/${idItem}`;
-    const res = await fetch(url,{
+    const res = await fetch(url, {
       method: 'DELETE'
     });
     const data = await res.json();
     console.log(data)
-    if(data.status == 200){
-      ToastAndroid.show(data.msg,0);
-    }else{
-      ToastAndroid.show(data.msg,0);
+    if (data.status == 200) {
+      ToastAndroid.show(data.msg, 0);
+    } else {
+      ToastAndroid.show(data.msg, 0);
     }
   }
 
+  const themVaoHoaDon = async () => {
+    const id_Bill = await AsyncStorage.getItem('id_Bill');
+    if (id_Bill != null) {
+      const url = `${URL}/hoadonchitiets/post`
+      const HDCT = {
+        id_HoaDon: id_Bill,
+        id_DichVu: item._id,
+        soLuong: 1,
+        giaTien: item.giaTien,
+        ghiChu: "",
+      }
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(HDCT),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      const data = await res.json();
+      if (data.status === 200) {
+        ToastAndroid.show(data.msg, 0);
+        navigation.navigate("TaoHoaDon");
+        setcheckAdd(true);
+      } else {
+        ToastAndroid.show(data.msg, 0);
+      }
+    }else{
+      addBill();
+    }
+  }
+
+  const addBill = async () => {
+    const url = `${URL}/hoadons/post`;
+    const NewBill = {
+      id_NhanVien: User._id
+    }
+
+    const res = await fetch(url,
+      {
+        method: "POST",
+        body: JSON.stringify(NewBill),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+    const data = await res.json();
+    if (data.status == 200) {
+      const id_Bill = data.data._id;
+      await AsyncStorage.setItem('id_Bill', id_Bill);
+      themVaoHoaDon();
+      console.log(data.data._id);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -124,8 +196,8 @@ const DichVuChiTiet = ({ navigation, route }) => {
               : <Text style={[styles.price, { color: 'red' }]}>      Tạm ngừng cung cấp</Text>}
           </View>
 
-          <OptionModal/>
-          <ModalDelete/>
+          <OptionModal />
+          <ModalDelete />
 
         </ImageBackground>
       </View>
@@ -139,8 +211,8 @@ const DichVuChiTiet = ({ navigation, route }) => {
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={styles.btn}>
-        <Text>Thêm vào hóa đơn</Text>
+      <TouchableOpacity style={[styles.btn,{backgroundColor : !checkAdd ? 'green' : 'pink'}]} onPress={() => themVaoHoaDon()}>
+        <Text>{!checkAdd ? 'Thêm vào hóa đơn' : 'Tạo hóa đơn ngay'}</Text>
       </TouchableOpacity>
     </View>
   )
@@ -198,8 +270,8 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center"
-},
-cardModal: {
+  },
+  cardModal: {
     width: "90%",
     margin: 20,
     backgroundColor: "white",
@@ -211,22 +283,22 @@ cardModal: {
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-},
-textModal: {
+  },
+  textModal: {
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 10,
-},
-icon: {
-  width: 20, height: 20
-},
-button: {
-  borderRadius: 10,
-  padding: 10,
-  width: 100,
-  margin: 10,
-  alignItems: "center",
-  backgroundColor: "#2196F3",
-},
+  },
+  icon: {
+    width: 20, height: 20
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    width: 100,
+    margin: 10,
+    alignItems: "center",
+    backgroundColor: "#2196F3",
+  },
 })

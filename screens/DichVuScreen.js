@@ -55,12 +55,21 @@ const DichVuScreen = ({ navigation }) => {
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
+          <Text style={styles.cardPrice}>{formatPrice(item.giaTien)}</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
       </Pressable>
     )
   }
+
+
+  // hàm format price
+  const formatPrice = (price) => {
+    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
+    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+  };
+
 
   useEffect(() => {
     getListDichVu();

@@ -1,12 +1,23 @@
 import { FlatList, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const URL = 'http://10.24.50.97:3000';
+export const URL = 'http://192.168.100.3:3000';
 
 const HomeScreen = ({ navigation }) => {
 
   const [ListDichVu, setListDichVu] = useState([]);
+  const [User, setUser] = useState([]);
+  const [Bill, setBill] = useState([]);
+  const [idBill, setidBill] = useState('');
+
+  const checkIdBill = async () => {
+    const id = await AsyncStorage.getItem('id_Bill');
+    if (id != null) {
+      setidBill(id);
+    }
+  }
 
   const getListDichVu = async () => {
     const url = `${URL}/dichvus`;
@@ -20,18 +31,64 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
+  // lấy user từ AsyncStorage
+  const retrieveData = async () => {
+    try {
+      const UserData = await AsyncStorage.getItem('User');
+      if (UserData != null) {
+        setUser(JSON.parse(UserData));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // hàm format price
+  const formatPrice = (price) => {
+    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
+    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+  };
+
+
+
+  const addBill = async () => {
+    const url = `${URL}/hoadons/post`;
+    const NewBill = {
+      id_NhanVien: User._id
+    }
+
+    const res = await fetch(url,
+      {
+        method: "POST",
+        body: JSON.stringify(NewBill),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+    const data = await res.json();
+    if (data.status == 200) {
+      const id_Bill = data.data._id;
+      await AsyncStorage.setItem('id_Bill', id_Bill);
+      console.log(data.data._id);
+    }
+  }
+
   useEffect(() => {
-    getListDichVu()
+    getListDichVu();
+    retrieveData();
+    checkIdBill();
   }, [navigation])
 
   const renderItem = ({ item, index }) => {
     return (
-      <Pressable style={styles.card} onPress={()=>{navigation.navigate('DichVuChiTiet',{item : item})}}>
+      <Pressable style={styles.card} onPress={() => { navigation.navigate('DichVuChiTiet', { item: item }) }}>
         <Image style={styles.cardImg}
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
+          <Text style={styles.cardPrice}>{formatPrice(item.giaTien)}</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
       </Pressable>
@@ -46,12 +103,17 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.title}>Chào ngày mới</Text>
           {/* <Image source={{ uri: "https://i.pinimg.com/236x/ec/0a/dc/ec0adceb46869873ae79525b369c619f.jpg" }}
             style={{ width: '100%', height: 300 }} resizeMode='repeat' /> */}
-          <SlideShow/>
+          <SlideShow />
         </View>
 
         <View style={[styles.viewSt, { alignItems: 'center' }]}>
           <Text style={{ color: 'blue', fontStyle: 'italic' }}>Công việc hôm nay</Text>
-          <Text style={{ color: 'blue', fontStyle: 'italic' }}>Tạo hóa đơn ngay</Text>
+          {idBill == ''
+            ? <Text style={{ color: 'blue', fontStyle: 'italic' }}
+              onPress={() => { addBill(), navigation.navigate('TaoHoaDon') }}>
+              Tạo hóa đơn ngay</Text>
+            : <Text style={{ color: 'blue', fontStyle: 'italic' }}
+            onPress={() => { navigation.navigate('TaoHoaDon') }}>Bill</Text>}
         </View>
 
         <View style={styles.viewSt}>
@@ -59,7 +121,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             scrollEnabled={false}
             numColumns={2}
-            data={ListDichVu.filter((item) => item.type == false).slice(0,2)}
+            data={ListDichVu.filter((item) => item.type == false).slice(0, 2)}
             keyExtractor={item => item._id}
             renderItem={renderItem}></FlatList>
         </View>
@@ -69,7 +131,7 @@ const HomeScreen = ({ navigation }) => {
           <FlatList
             scrollEnabled={false}
             numColumns={2}
-            data={ListDichVu.filter((item) => item.type == true).slice(0,4)}
+            data={ListDichVu.filter((item) => item.type == true).slice(0, 4)}
             keyExtractor={item => item._id}
             renderItem={renderItem}></FlatList>
         </View>

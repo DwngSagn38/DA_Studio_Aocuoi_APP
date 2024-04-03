@@ -15,7 +15,9 @@ const HoaDonScreen = ({ navigation }) => {
     try {
       const res = await fetch(url);
       const data = await res.json();
-      setListHoaDon(data);
+      const listData = data;
+      const list = listData.filter((hd) => hd.id_KhachHang != null);
+      setListHoaDon(list);
       if (trangThai != '' || trangThai == 0) {
         const list = ListHoaDon.filter((hd) => hd.trangThai == trangThai);
         setListTrangThai(list);
@@ -61,6 +63,13 @@ const HoaDonScreen = ({ navigation }) => {
     return `${year}-${month}-${day}`;
   }
 
+    // hàm format price
+    const formatPrice = (price) => {
+      // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
+      const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+    };
+
   const renderItem = ({ item }) => {
 
     const khachhang = ListKhachHang.find((kh) => kh._id === item.id_KhachHang);
@@ -71,8 +80,8 @@ const HoaDonScreen = ({ navigation }) => {
         backgroundColor: item.trangThai === -1 ? 'gray' : 'white'
       }]}>
         <Text style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center' }}>{khachhang?.tenKhachHang}</Text>
-        <Text>Tổng tiền : {item.tongTien} đ - -
-          Ngày : {formatDate(item.ngayMua)}</Text>
+        <Text>Tổng tiền : {formatPrice(item.tongTien)} - -
+          Ngày : {formatDate(item.createdAt)}</Text>
       </View>
     )
   }
