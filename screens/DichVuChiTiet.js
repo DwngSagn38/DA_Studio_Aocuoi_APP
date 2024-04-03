@@ -1,8 +1,101 @@
-import { Image, ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Image, ImageBackground, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { URL } from './HomeScreen';
 
 const DichVuChiTiet = ({ navigation, route }) => {
   const { item } = route.params;
+  const [idItem, setidItem] = useState(item?._id);
+  const [optionVisible, setoptionVisible] = useState(false);
+  const [DeleteVisible, setDeleteVisible] = useState(false);
+
+  // modal option
+  const OptionModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={optionVisible}>
+        <View
+          style={styles.cardCotainer}>
+          <View style={styles.cardModal}>
+            <Text style={styles.textModal}>
+              Chức năng quản lý
+            </Text>
+
+            <View style={{ flexDirection: "row" }}>
+              <Pressable
+                style={[styles.button]}
+                onPress={() => {
+                  setoptionVisible(!optionVisible), navigation.navigate('AddUpdateDichVu', { item: item })
+                }}>
+                <Text style={styles.textStyle}>Update</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button]}
+                onPress={() => { setoptionVisible(false),setDeleteVisible(true) }}>
+                <Text style={styles.textStyle}>Delete</Text>
+              </Pressable>
+            </View>
+
+            <TouchableOpacity style={{ position: 'absolute', right: 20, top: 20 }}
+              onPress={() => setoptionVisible(false)}>
+              <Image style={styles.icon}
+                source={require('../assets/image/cancel.png')} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+      //modal delete
+      const ModalDelete = () => {
+        return (
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={DeleteVisible}>
+                <View
+                    style={styles.cardCotainer}>
+                    <View style={styles.cardModal}>
+                        <Text style={styles.textModal}>
+                            Bạn có chắc chắn muốn xóa không?
+                        </Text>
+
+                        <View style={{ flexDirection: "row" }}>
+                            <Pressable
+                                style={[styles.button]}
+                                onPress={() => {
+                                    setDeleteVisible(!DeleteVisible)
+                                }}>
+                                <Text style={styles.textStyle}>Không</Text>
+                            </Pressable>
+                            <Pressable
+                                style={[styles.button]}
+                                onPress={() => { setDeleteVisible(!DeleteVisible), deleteDichVu(), navigation.goBack() }}>
+                                <Text style={styles.textStyle}>Đồng ý</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+  const deleteDichVu = async () => {
+    const url = `${URL}/dichvus/delete/${idItem}`;
+    const res = await fetch(url,{
+      method: 'DELETE'
+    });
+    const data = await res.json();
+    console.log(data)
+    if(data.status == 200){
+      ToastAndroid.show(data.msg,0);
+    }else{
+      ToastAndroid.show(data.msg,0);
+    }
+  }
+
 
   return (
     <View style={styles.container}>
@@ -17,7 +110,10 @@ const DichVuChiTiet = ({ navigation, route }) => {
               <Image source={require('../assets/image/back.png')} style={styles.icon} tintColor={'gray'} />
             </TouchableOpacity>
             <Text style={styles.title}>{item.tenDichVu}</Text>
-            <View />
+            <TouchableOpacity style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 4 }}
+              onPress={() => { setoptionVisible(true) }}>
+              <Image source={require('../assets/image/open-menu.png')} style={styles.icon} tintColor={'gray'} />
+            </TouchableOpacity>
           </View>
 
           <View style={styles.info}>
@@ -28,6 +124,8 @@ const DichVuChiTiet = ({ navigation, route }) => {
               : <Text style={[styles.price, { color: 'red' }]}>      Tạm ngừng cung cấp</Text>}
           </View>
 
+          <OptionModal/>
+          <ModalDelete/>
 
         </ImageBackground>
       </View>
@@ -95,5 +193,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: 'white'
-  }
+  },
+  cardCotainer: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+},
+cardModal: {
+    width: "90%",
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+},
+textModal: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+},
+icon: {
+  width: 20, height: 20
+},
+button: {
+  borderRadius: 10,
+  padding: 10,
+  width: 100,
+  margin: 10,
+  alignItems: "center",
+  backgroundColor: "#2196F3",
+},
 })

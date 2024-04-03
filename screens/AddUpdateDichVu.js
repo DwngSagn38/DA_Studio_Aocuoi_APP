@@ -5,7 +5,7 @@ import { URL } from './HomeScreen';
 
 
 const AddUpdateDichVu = ({ navigation, route }) => {
-  const { item } = route.params?.item;
+  const { item } = route.params;
 
   const [selectedImage, setselectedImage] = useState(null);
 
@@ -14,6 +14,8 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   const [MoTa, setMoTa] = useState('');
   const [TrangThai, setTrangThai] = useState(true);
   const [Type, setType] = useState(true);
+  const [checkAdd, setcheckAdd] = useState(true);
+  const [idItem, setidItem] = useState('');
 
   const PickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,10 +31,14 @@ const AddUpdateDichVu = ({ navigation, route }) => {
       setselectedImage(result.assets[0].uri)
     }
   }
-  
 
   const addDichVu = async () => {
-    const url = `${URL}/dichvus/post`
+    const urladd = `${URL}/dichvus/post`;
+    const urlupdate = `${URL}/dichvus/put/${idItem}`;
+
+    const linkAPI = checkAdd ? urladd : urlupdate;
+    const method = checkAdd ? 'POST' : 'PUT';
+
     if (TenDichVu == '' || GiaTien == '') {
       ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', 0);
       return;
@@ -46,23 +52,38 @@ const AddUpdateDichVu = ({ navigation, route }) => {
       type: Type
     }
 
-    const res = await fetch(url, {
-      method: 'POST',
+    const res = await fetch(linkAPI, {
+      method: method,
       body: JSON.stringify(NewDichVu),
       headers: {
         'Content-Type': 'application/json'
-    }
+      }
     })
 
     const data = await res.json();
     console.log(data.data);
     if (data.status === 200) {
+      navigation.navigate('DichVuChiTiet');
       ToastAndroid.show(data.msg, 0);
       resetData();
     } else {
       ToastAndroid.show(data.msg, 0);
     }
   }
+
+  useEffect(() => {
+    if (item != null) {
+      setidItem(item._id)
+      setTenDichVu(item.tenDichVu);
+      setGiaTien(item.giaTien);
+      setMoTa(item.moTa);
+      setTrangThai(item.trangThai);
+      setType(item.type);
+      setselectedImage(item.hinhAnh);
+      setcheckAdd(false);
+    }
+  }, [navigation])
+  
 
   const resetData = () => {
     setGiaTien('');
@@ -80,14 +101,14 @@ const AddUpdateDichVu = ({ navigation, route }) => {
             <Image style={{ width: 20, height: 20 }}
               source={require('../assets/image/back.png')} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Thêm dịch vụ</Text>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Nhập thông tin dịch vụ</Text>
           <View />
         </View>
         <ScrollView>
           <View style={{ width: '100%', height: 230, justifyContent: 'space-between', alignItems: 'center' }}>
 
             <Image style={{ width: '100%', height: 200, borderRadius: 10 }} resizeMode='repeat'
-              source={{ uri: selectedImage || 'https://i.pinimg.com/236x/50/25/d5/5025d51da54255dae9152d584afcb68b.jpg' }} />
+              source={{ uri:selectedImage || 'https://i.pinimg.com/236x/50/25/d5/5025d51da54255dae9152d584afcb68b.jpg' }} />
             <Text style={{ fontSize: 16 }}>Hình ảnh </Text>
 
           </View>
@@ -102,7 +123,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
               placeholder={'Giá tiền'}
               keyboardType='numeric'
               onChangeText={(txt) => setGiaTien(txt)}
-              value={GiaTien || ''}
+              value={String(GiaTien) || ''}
             />
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>

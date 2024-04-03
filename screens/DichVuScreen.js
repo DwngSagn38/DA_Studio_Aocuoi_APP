@@ -9,7 +9,6 @@ const DichVuScreen = ({ navigation }) => {
   const [typeDichVu, settypeDichVu] = useState(0);
 
 
-
   const getListDichVu = async () => {
     const url = `${URL}/dichvus`;
     try {
@@ -28,7 +27,6 @@ const DichVuScreen = ({ navigation }) => {
       console.log(err);
     }
   }
-
   const getListSearch = async () => {
     const url = `${URL}/dichvus/search?key=${search}`;
     try {
@@ -48,6 +46,8 @@ const DichVuScreen = ({ navigation }) => {
     }
   }
 
+
+
   const renderItem = ({ item, index }) => {
     return (
       <Pressable style={styles.card} onPress={() => { navigation.navigate('DichVuChiTiet', { item: item }) }}>
@@ -63,8 +63,8 @@ const DichVuScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    getListDichVu()
-    getListSearch()
+    getListDichVu();
+    getListSearch();
   }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>
@@ -91,7 +91,7 @@ const DichVuScreen = ({ navigation }) => {
         renderItem={renderItem}></FlatList>
 
 
-      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu',{item: ''})}}
+      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu', { item: '' }) }}
         style={styles.btnAdd}>
         <Image source={require('../assets/image/add.png')} style={styles.icon} />
       </TouchableOpacity>
