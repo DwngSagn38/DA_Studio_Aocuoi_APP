@@ -1,17 +1,96 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Platform, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { URL } from './HomeScreen';
+import emailValidator from 'email-validator';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 const ManageUser = ({ navigation, route }) => {
 
   const { User } = route.params;
 
   const [selectedImage, setselectedImage] = useState(null);
+  const [id_NhanVien, setId_NhanVien] = useState(User._id);
+  const [Fullname, setFullname] = useState(User.fullname);
+  const [Email, setEmail] = useState(User.email);
+  const [Address, setAddress] = useState(User.address);
+  const [Phone, setPhone] = useState(User.phone);
 
-  const [Fullname, setFullname] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Address, setAddress] = useState('');
-  const [Phone, setPhone] = useState('');
+  // Check email
+  const isValidEmail = emailValidator.validate(Email);
+  console.log('Email: ', isValidEmail);
+
+  //check phone
+  const validatePhoneNumber = (phoneNumber) => {
+    const regex = /^0\d{9}$/;
+    return regex.test(phoneNumber);
+  };
+
+  // Sử dụng hàm validatePhoneNumber:
+  const isValidPhoneNumber = validatePhoneNumber(Phone);
+  console.log('Số điện thoại ', isValidPhoneNumber, '\n'); // true
+
+
+  const newData = {
+    fullname: Fullname,
+    email: Email,
+    address: Address,
+    phone: Phone
+  }
+  const saveProfile = async () => {
+    try {
+      if (Fullname === '' || Email === '' || Address === '' || Phone === '') {
+        if (Platform.OS === 'ios') {
+          Alert.alert('Không được để trống thông tin!');
+        }
+        else {
+          ToastAndroid.show('Không được để trống thông tin!', 0)
+        }
+      }
+      else if (!isValidEmail) {
+        if (Platform.OS === 'ios') {
+          Alert.alert('Email không đúng định dạng!');
+        }
+        else {
+          ToastAndroid.show('Email không đúng định dạng!', 0)
+        }
+      }
+      else if (!isValidPhoneNumber) {
+        if (Platform.OS === 'ios') {
+          Alert.alert('Số điện thoại không đúng định dạng!');
+        }
+        else {
+          ToastAndroid.show('Số điện thoại không đúng định dạng!', 0)
+        }
+      }
+      else {
+
+        const reponse = await fetch(`${URL}/nhanviens/put/${id_NhanVien}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newData)
+        });
+        const data = await reponse.json();
+        console.log(data);
+        if (data.status == 200) {
+          ToastAndroid.show(data.msg, 0);
+          // await AsyncStorage.setItem('User', JSON.stringify(data.data));
+          // navigation.goBack()
+        }
+        else {
+          ToastAndroid.show(data.msg, 0);
+
+        }
+
+      }
+    } catch (error) {
+      console.log('Lỗi ', error);
+    }
+  }
+
 
   const PickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,24 +115,26 @@ const ManageUser = ({ navigation, route }) => {
         </TouchableOpacity>
         <Text style={{ marginLeft: 80, fontSize: 18, fontWeight: 'bold' }}>Chỉnh sửa thông tin</Text>
       </View>
-      <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center', gap: 14 }}>
-        <Image style={{ width: 200, height: 200, borderRadius: 30 }}
-          source={User.avatar || selectedImage ? {uri : selectedImage || User.avatar } : require('../assets/image/pesonal.png')} />
-        <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chính sửa</Text>
-      </View>
-      <View style={styles.textInput}>
-        <TextInput style={styles.input} placeholder={User.fullname} onChangeText={(txt) => setFullname(txt)} />
-        <TextInput style={styles.input} placeholder={ User.email || 'Email'} onChangeText={(txt) => setEmail(txt)} />
-        <TextInput style={styles.input} placeholder={ User.address || 'Address'} onChangeText={(txt) => setAddress(txt)} />
-        <TextInput style={styles.input} placeholder={ User.phone || 'Number phone'} onChangeText={(txt) => setPhone(txt)} />
-      </View>
-      <TouchableOpacity onPress={PickImage}
-        style={styles.button}>
-        <Text>CHỌN ẢNH</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <Text>LƯU THÔNG TIN</Text>
-      </TouchableOpacity>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center', gap: 14 }}>
+          <Image style={{ width: 200, height: 200, borderRadius: 30 }}
+            source={User.avatar || selectedImage ? { uri: selectedImage || User.avatar } : require('../assets/image/pesonal.png')} />
+          <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chính sửa</Text>
+        </View>
+        <View style={styles.textInput}>
+          <TextInput style={styles.input} value={Fullname} placeholder='Full name' onChangeText={(txt) => setFullname(txt)} />
+          <TextInput style={styles.input} value={Email} placeholder='Email' onChangeText={(txt) => setEmail(txt)} />
+          <TextInput style={styles.input} value={Address} placeholder='Address' onChangeText={(txt) => setAddress(txt)} />
+          <TextInput style={styles.input} value={Phone} placeholder='Phone' onChangeText={(txt) => setPhone(txt)} />
+        </View>
+        <TouchableOpacity onPress={PickImage}
+          style={styles.button}>
+          <Text>CHỌN ẢNH</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={saveProfile}>
+          <Text>LƯU THÔNG TIN</Text>
+        </TouchableOpacity></ScrollView>
     </View>
   )
 }
@@ -84,6 +165,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     borderRadius: 10,
+    marginTop: 10,
     backgroundColor: '#FFC0CB',
     alignItems: 'center'
   }
