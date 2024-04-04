@@ -20,6 +20,7 @@ const KhachHangScreen = ({ navigation }) => {
       const res = await fetch(url);
       const data = await res.json();
       setlistKhachHang(data);
+      console.log(data)
     } catch (error) {
       console.log(error);
     }
@@ -219,11 +220,11 @@ const KhachHangScreen = ({ navigation }) => {
             <View style={{ width: '80%', gap: 20, justifyContent: 'space-around' }}>
 
               <TextInput placeholder='Nhập họ tên' style={styles.input}
-                onChangeText={(txt) => settenKhachHang(txt)} value={!checkAdd ? tenKhachHang : ''}/>
+                onChangeText={(txt) => settenKhachHang(txt)} value={!checkAdd ? tenKhachHang : null}/>
               <TextInput placeholder='Nhập số điện thoại' style={styles.input}
-                onChangeText={(txt) => setdienThoai(txt)} value={!checkAdd ? dienThoai : ''}/>
+                onChangeText={(txt) => setdienThoai(txt)} value={!checkAdd ? dienThoai : null}/>
               <TextInput placeholder='Nhập địa chỉ' style={styles.input}
-                onChangeText={(txt) => setdiaChi(txt)} value={!checkAdd ? diaChi : ''}/>
+                onChangeText={(txt) => setdiaChi(txt)} value={!checkAdd ? diaChi : null}/>
 
             </View>
             <View style={{ flexDirection: "row" }}>

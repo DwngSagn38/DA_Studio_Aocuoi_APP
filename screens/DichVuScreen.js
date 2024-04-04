@@ -9,7 +9,6 @@ const DichVuScreen = ({ navigation }) => {
   const [typeDichVu, settypeDichVu] = useState(0);
 
 
-
   const getListDichVu = async () => {
     const url = `${URL}/dichvus`;
     try {
@@ -28,7 +27,6 @@ const DichVuScreen = ({ navigation }) => {
       console.log(err);
     }
   }
-
   const getListSearch = async () => {
     const url = `${URL}/dichvus/search?key=${search}`;
     try {
@@ -48,6 +46,8 @@ const DichVuScreen = ({ navigation }) => {
     }
   }
 
+
+
   const renderItem = ({ item, index }) => {
     return (
       <Pressable style={styles.card} onPress={() => { navigation.navigate('DichVuChiTiet', { item: item }) }}>
@@ -55,16 +55,25 @@ const DichVuScreen = ({ navigation }) => {
           source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={styles.cardPrice}>{item.giaTien} đ</Text>
+          <Text style={styles.cardPrice}>{formatPrice(item.giaTien)}</Text>
           <Text style={{ color: 'red', fontSize: 11 }}>Chi tiết</Text>
         </View>
       </Pressable>
     )
   }
 
+
+  // hàm format price
+  const formatPrice = (price) => {
+    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
+    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+  };
+
+
   useEffect(() => {
-    getListDichVu()
-    getListSearch()
+    getListDichVu();
+    getListSearch();
   }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>
@@ -91,7 +100,7 @@ const DichVuScreen = ({ navigation }) => {
         renderItem={renderItem}></FlatList>
 
 
-      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu',{item: ''})}}
+      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu', { item: '' }) }}
         style={styles.btnAdd}>
         <Image source={require('../assets/image/add.png')} style={styles.icon} />
       </TouchableOpacity>

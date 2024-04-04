@@ -46,6 +46,13 @@ const ThongKeScreen = () => {
     }
   }
 
+  // hàm format price
+  const formatPrice = (price) => {
+    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
+    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+  };
+
   const getThongKe = async () => {
     const url = `${URL}/thongke/doanhthu-thongso`;
     const res = await fetch(url);
@@ -76,7 +83,7 @@ const ThongKeScreen = () => {
       <View style={{ marginTop: 10, padding: 20, borderWidth: 1, borderRadius: 8, width: '94%', marginHorizontal: 12 }}>
         <Text>Tháng {item._id.month} / {item._id.year}</Text>
         <Text>Có {item.TongSoKhachHang.length} khách hàng mua {item.TongHoaDon} hóa đơn
-          {'\n'}Doanh thu {item.TongTien} vnđ</Text>
+          {'\n'}Doanh thu {formatPrice(item.TongTien)} vnđ</Text>
       </View>
     )
   }
@@ -128,7 +135,7 @@ const ThongKeScreen = () => {
           <DoanhThuLineChart />
 
           <View style={{ padding: 10, gap: 20, marginVertical: 20 }}>
-            <Text style={[styles.doanhThu, { color: 'green' }]}>Tổng doanh thu: {loading ? 0 : TongDoanhThu} VNĐ</Text>
+            <Text style={[styles.doanhThu, { color: 'green' }]}>Tổng doanh thu: {loading ? 0 : formatPrice(TongDoanhThu)}</Text>
             <View style={{ padding: 30, gap: 10, borderRadius: 10, borderWidth: 1 }}>
               <Text style={styles.doanhThu}>Thông số</Text>
               <Text style={styles.text}>Tổng hóa đơn                                                  {loading ? 0 : TongHoaDon}</Text>
@@ -142,7 +149,7 @@ const ThongKeScreen = () => {
 
           <Text style={styles.doanhThu}>Số liệu thống kê theo tháng</Text>
 
-          {loading ? <ActivityIndicator color={'black'}/>
+          {loading ? <ActivityIndicator color={'black'} />
             :
             <FlatList
               scrollEnabled={false}

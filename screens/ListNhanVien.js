@@ -80,7 +80,8 @@ const ListNhanVien = ({ navigation }) => {
         try {
             const res = await fetch(url);
             const data = await res.json();
-            setdata(data);
+            const list = data;
+            setdata(list.filter(nv=> nv.role == 0));
         } catch (err) {
             console.log(err);
         }
