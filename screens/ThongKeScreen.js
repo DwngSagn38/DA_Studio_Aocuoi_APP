@@ -56,7 +56,7 @@ const ThongKeScreen = () => {
   };
 
   const getThongKe = async () => {
-    const url = `${URL}/thongke/doanhthu-thongso`;
+    const url = `${URL}/thongke/doanhthu-thongso?year=${year}`;
     const res = await fetch(url);
     const data = await res.json();
 

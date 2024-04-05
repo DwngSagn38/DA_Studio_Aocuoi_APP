@@ -79,32 +79,28 @@ const TaoHoaDon = ({ navigation }) => {
         });
         const data = await res.json();
         if (data.status == 200) {
+            ToastAndroid.show(data.msg, 0);
             getData()
-            console.log(data.msg);
         } else {
-            console.log(data.msg);
+            ToastAndroid.show(data.msg, 0);
         }
     }
 
     const deleteHD = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
         console.log(id);
-        if (id == null) {
+        const url = `${URL}/hoadons/delete/${id}`
+        const res = await fetch(url, {
+            method: "DELETE"
+        });
+        const data = await res.json();
+        if (data.status == 200) {
             navigation.goBack();
-        } else {
-            const url = `${URL}/hoadons/delete/${id}`
-            const res = await fetch(url, {
-                method: "DELETE"
-            });
-            const data = await res.json();
-            if (data.status == 200) {
-                navigation.goBack();
-                await AsyncStorage.setItem('id_Bill', '');
-            }
-            console.log('====================================');
-            console.log(data.msg);
-            console.log('====================================');
+            await AsyncStorage.setItem('id_Bill', '');
         }
+        console.log('====================================');
+        console.log(data.msg);
+        console.log('====================================');
     }
 
 
@@ -112,7 +108,7 @@ const TaoHoaDon = ({ navigation }) => {
         getDV();
         getKH();
         getData();
-    }, [idKhachHang, navigation, quantities])
+    }, [idKhachHang, navigation])
 
     // hàm format price
     const formatPrice = (price) => {
@@ -137,10 +133,10 @@ const TaoHoaDon = ({ navigation }) => {
 
     const renderItem = ({ item, index }) => {
         const dichvu = ListDichVu.find(dv => dv._id == item.id_DichVu);
-        const Quantity = quantities[item.id_DichVu] || 1; // Số lượng của mục đang được hiển thị
+        const Quantity = quantities[item.id_DichVu] || 0; // Số lượng của mục đang được hiển thị
 
         const decreaseQuantity = () => {
-            if (Quantity > 1) {
+            if (Quantity > 0) {
                 setQuantities({
                     ...quantities,
                     [item.id_DichVu]: Quantity - 1
@@ -219,30 +215,28 @@ const TaoHoaDon = ({ navigation }) => {
             </View>
             {listHDCT.length == 0 ?
                 <TouchableOpacity onPress={() => navigation.navigate("Home")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
-                : <View style={{ height: '70%' }}>
-                    <FlatList
-                        data={listHDCT}
-                        keyExtractor={item => item._id}
-                        renderItem={renderItem}></FlatList>
-                    <View style={{ padding: 20, backgroundColor: 'pink', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text>Tổng tiền : {formatPrice(TongTien)}</Text>
-                        <Pressable onPress={() => {
-                            if (idKhachHang == '') {
-                                ToastAndroid.show('Vui lòng chọn khách hàng', 0);
-                            } else {
-                                navigation.navigate('CheckBill', {
-                                    tongTien: TongTien,
-                                    khachHang: KhachHang,
-                                    soDichVu: listHDCT.length
-                                })
-                            }
-                        }}
-                            style={{ padding: 10, backgroundColor: 'blue' }}>
-                            <Text>Xác nhận</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            }
+                : <FlatList
+                    data={listHDCT}
+                    keyExtractor={item => item._id}
+                    renderItem={renderItem}></FlatList>}
+
+            <View style={{ padding: 20, backgroundColor: 'pink', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text>Tổng tiền : {formatPrice(TongTien)}</Text>
+                <Pressable onPress={() => {
+                    if (idKhachHang == '') {
+                        ToastAndroid.show('Vui lòng chọn khách hàng', 0);
+                    } else {
+                        navigation.navigate('CheckBill', {
+                            tongTien: TongTien,
+                            khachHang: KhachHang,
+                            soDichVu: listHDCT.length
+                        })
+                    }
+                }}
+                    style={{ padding: 10, backgroundColor: 'blue' }}>
+                    <Text>Xác nhận</Text>
+                </Pressable>
+            </View>
         </View>
     )
 }

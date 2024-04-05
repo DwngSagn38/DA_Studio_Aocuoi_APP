@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const URL = 'http://192.168.100.3:3000';
+export const URL = 'http://10.24.52.22:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -106,13 +106,10 @@ const HomeScreen = ({ navigation }) => {
           <SlideShow />
         </View>
 
-        <View style={[styles.viewSt, { alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }]}>
-          <Text style={styles.button}
-          onPress={() => {
-            navigation.navigate('CongViecScreen')
-          }}>Công việc hôm nay</Text>
+        <View style={[styles.viewSt, { alignItems: 'center' }]}>
+          <Text style={{ color: 'blue', fontStyle: 'italic' }}>Công việc hôm nay</Text>
           {idBill == ''
-            ? <Text style={styles.button}
+            ? <Text style={{ color: 'blue', fontStyle: 'italic' }}
               onPress={() => { addBill(), navigation.navigate('TaoHoaDon') }}>
               Tạo hóa đơn ngay</Text>
             : <Text style={{ color: 'blue', fontStyle: 'italic' }}
@@ -194,10 +191,5 @@ const styles = StyleSheet.create({
   cardPrice: {
     color: 'red',
     fontSize: 13
-  }, 
-  button: {
-    borderRadius: 10,
-    padding: 10,
-    borderWidth: 1,
   }
 })
