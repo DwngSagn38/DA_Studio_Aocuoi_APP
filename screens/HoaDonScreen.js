@@ -42,8 +42,14 @@ const HoaDonScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    getData();
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getData();
     getKhachHangs();
+    });
+
+    return unsubscribe;
+
   }, [navigation, trangThai])
 
   function formatDate(dateString) {

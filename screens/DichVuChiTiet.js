@@ -85,19 +85,6 @@ const DichVuChiTiet = ({ navigation, route }) => {
     )
   }
 
-
-  // lấy user từ AsyncStorage
-  const retrieveData = async () => {
-    try {
-      const UserData = await AsyncStorage.getItem('User');
-      if (UserData != null) {
-        setUser(JSON.parse(UserData));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const deleteDichVu = async () => {
     const url = `${URL}/dichvus/delete/${idItem}`;
     const res = await fetch(url, {
@@ -140,7 +127,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
       } else {
         ToastAndroid.show(data.msg, 0);
       }
-    }else{
+    } else {
       addBill();
     }
   }
@@ -211,8 +198,8 @@ const DichVuChiTiet = ({ navigation, route }) => {
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={[styles.btn,{backgroundColor : !checkAdd ? 'green' : 'pink'}]} onPress={() => themVaoHoaDon()}>
-        <Text>{!checkAdd ? 'Thêm vào hóa đơn' : 'Tạo hóa đơn ngay'}</Text>
+      <TouchableOpacity style={[styles.btn, { backgroundColor: !checkAdd ? 'green' : 'pink' }]} onPress={() => themVaoHoaDon()}>
+        <Text>Tạo hóa đơn ngay</Text>
       </TouchableOpacity>
     </View>
   )

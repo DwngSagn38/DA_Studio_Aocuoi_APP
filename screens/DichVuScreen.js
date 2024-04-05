@@ -72,8 +72,14 @@ const DichVuScreen = ({ navigation }) => {
 
 
   useEffect(() => {
-    getListDichVu();
-    getListSearch();
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getListDichVu();
+      getListSearch();;
+    });
+
+    return unsubscribe;
+
   }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>
