@@ -15,7 +15,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   const [TrangThai, setTrangThai] = useState(true);
   const [Type, setType] = useState(true);
   const [checkAdd, setcheckAdd] = useState(true);
-  const [idItem, setidItem] = useState('');
+  const [idItem, setidItem] = useState(item?._id);
 
   const PickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -63,7 +63,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
     const data = await res.json();
     console.log(data.data);
     if (data.status === 200) {
-      navigation.navigate('DichVuChiTiet');
+      navigation.navigate('DichVuChiTiet', {item : item});
       ToastAndroid.show(data.msg, 0);
       resetData();
     } else {
@@ -72,8 +72,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    if (item != null) {
-      setidItem(item._id)
+    if (item != null && item != undefined) {
       setTenDichVu(item.tenDichVu);
       setGiaTien(item.giaTien);
       setMoTa(item.moTa);
@@ -82,7 +81,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
       setselectedImage(item.hinhAnh);
       setcheckAdd(false);
     }
-  }, [navigation])
+  }, [navigation,item])
   
 
   const resetData = () => {

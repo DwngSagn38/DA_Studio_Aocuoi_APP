@@ -169,6 +169,11 @@ const DichVuChiTiet = ({ navigation, route }) => {
     }
   }
 
+  useEffect(() => {
+    item
+  }, [item])
+  
+
   return (
     <View style={styles.container}>
       <View style={{ height: '70%' }}>
