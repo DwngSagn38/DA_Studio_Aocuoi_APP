@@ -80,6 +80,7 @@ const MainNavigator = () => {
             <Stack.Screen name='AddUpdateDichVu' component={AddUpdateDichVu} />
             <Stack.Screen name='TaoHoaDon' component={TaoHoaDon} />
             <Stack.Screen name='CheckBill' component={CheckBill} />
+            <Stack.Screen name='DichVuScreen' component={DichVuScreen} />
         </Stack.Navigator>
     )
 }

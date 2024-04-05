@@ -7,7 +7,7 @@ export const Month = ['Jan', 'Fer', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 export const DataFake = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
-const ThongKeScreen = () => {
+const ThongKeScreen = ({navigation}) => {
 
   const [loading, setloading] = useState(true);
 
@@ -75,10 +75,16 @@ const ThongKeScreen = () => {
 
   console.log(SoLieu);
 
+  
   useEffect(() => {
-    getDoanhThuInMonth();
-    getThongKe()
-  }, [year])
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getDoanhThuInMonth();
+      getThongKe()
+    });
+
+    return unsubscribe;
+  }, [year, navigation])
 
   const renderSoLieu = ({ item }) => {
     return (

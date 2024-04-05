@@ -20,22 +20,22 @@ const TaoHoaDon = ({ navigation }) => {
 
     const getData = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        if(id!=null){
+        if (id != null) {
             const url = `${URL}/hoadonchitiets?id_HoaDon=${id}`;
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            setlistHDCT(data);
-            console.log('Id được tạo bill: ',id);
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                setlistHDCT(data);
+                console.log('Id được tạo bill: ', id);
 
-        } catch (error) {
-            console.log(error);
+            } catch (error) {
+                console.log(error);
+            }
         }
+        else {
+            await AsyncStorage.removeItem('id_Bill');
         }
-        else{
-         await AsyncStorage.removeItem('id_Bill');
-        }
-        
+
     }
 
     const getKH = async () => {
@@ -95,7 +95,7 @@ const TaoHoaDon = ({ navigation }) => {
 
     const deleteHD = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        console.log('Id xoá: ',id);
+        console.log('Id xoá: ', id);
         const url = `${URL}/hoadons/delete/${id}`
         const res = await fetch(url, {
             method: "DELETE"
@@ -110,34 +110,41 @@ const TaoHoaDon = ({ navigation }) => {
         console.log('====================================');
     }
 
-    const updateQuantity = async(id_CTHD, soLuongSave)=>{
+    const updateQuantity = async (id_CTHD, soLuongSave) => {
         try {
-            const res = await fetch(`${URL}/hoadonchitiets/put/${id_CTHD}`,{
-                method:'PUT',
-                body:JSON.stringify({soLuong:soLuongSave}),
+            const res = await fetch(`${URL}/hoadonchitiets/put/${id_CTHD}`, {
+                method: 'PUT',
+                body: JSON.stringify({ soLuong: soLuongSave }),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-        
+
             const data = await res.json();
-            if(data.status===200){
+            if (data.status === 200) {
                 console.log(data);
             }
-            else{
+            else {
                 console.log(data);
                 console.log('Kiểm tra lại');
             }
-        
+
         } catch (error) {
             console.log(error);
-            ToastAndroid.show('Lỗi',0)
+            ToastAndroid.show('Lỗi', 0)
         }
-        }
+    }
     useEffect(() => {
-        getDV();
-        getKH();
-        getData();
+        const unsubscribe = navigation.addListener('focus', () => {
+            setTimeout(() => {
+                getDV();
+                getKH();
+                getData();
+            }, 1);
+        });
+        return unsubscribe;
+
+
     }, [idKhachHang, navigation])
 
     // hàm format price
@@ -165,24 +172,24 @@ const TaoHoaDon = ({ navigation }) => {
         const dichvu = ListDichVu.find(dv => dv._id == item.id_DichVu);
         const Quantity = quantities[item.id_DichVu] || 0; // Số lượng của mục đang được hiển thị
 
-        const decreaseQuantity =async(id_CTHD) => {
+        const decreaseQuantity = async (id_CTHD) => {
             if (Quantity > 0) {
                 setQuantities({
                     ...quantities,
                     [item.id_DichVu]: Quantity - 1
                 });
-                await updateQuantity(id_CTHD,Quantity-1)
+                await updateQuantity(id_CTHD, Quantity - 1)
             } else {
                 deleteHDCT(item.id_DichVu)
             }
         };
 
-        const increaseQuantity =async(id_CTHD) => {
+        const increaseQuantity = async (id_CTHD) => {
             setQuantities({
                 ...quantities,
                 [item.id_DichVu]: Quantity + 1
             });
-            await updateQuantity(id_CTHD,Quantity+1)
+            await updateQuantity(id_CTHD, Quantity + 1)
 
         };
 
@@ -191,18 +198,18 @@ const TaoHoaDon = ({ navigation }) => {
         return (
             <View style={{ marginTop: 15, borderWidth: 1, padding: 14, borderRadius: 10, flexDirection: 'row', gap: 20 }}>
                 <Image source={{ uri: dichvu?.hinhAnh }} style={{ width: 100, height: 100 }} />
-                <View>
+                <View style={{ gap: 4 }}>
                     <Text>{dichvu?.tenDichVu}</Text>
                     <Text>Giá : {formatPrice(item.giaTien)}</Text>
 
-                    <Text>Tổng tiền : {formatPrice(totalPrice)}</Text>
+                    <Text>Tạm tính : {formatPrice(totalPrice)}</Text>
                     <View style={{ flexDirection: 'row', gap: 20 }}>
-                        <TouchableOpacity style={styles.btn} onPress={()=>decreaseQuantity(item._id)}>
-                            <Image source={require('../assets/image/tru.png')} style={{ width: 14, height: 14 }} />
+                        <TouchableOpacity style={styles.btn} onPress={() => decreaseQuantity(item._id)}>
+                            <Image source={require('../assets/image/tru.png')} style={{ width: 10, height: 10 }} />
                         </TouchableOpacity>
                         <Text>{Quantity}</Text>
-                        <TouchableOpacity style={styles.btn} onPress={()=>increaseQuantity(item._id)}>
-                            <Image source={require('../assets/image/add.png')} style={{ width: 14, height: 14 }} />
+                        <TouchableOpacity style={styles.btn} onPress={() => increaseQuantity(item._id)}>
+                            <Image source={require('../assets/image/add.png')} style={{ width: 10, height: 10 }} />
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -211,7 +218,7 @@ const TaoHoaDon = ({ navigation }) => {
     }
 
 
-    
+
     return (
         <View style={styles.container} >
             <View style={styles.header}>
@@ -246,33 +253,46 @@ const TaoHoaDon = ({ navigation }) => {
                 <Text> Địa chỉ : {DiaChi}</Text>
             </View>
 
-            <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+                <View />
                 <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>Dịch vụ yêu cầu</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('DichVuScreen')}
+                    style={[styles.button, { backgroundColor: 'white' }]}>
+                    <Image source={require('../assets/image/cloud.png')} style={styles.icon} />
+                    <Text>Thêm dịch vụ</Text>
+                </TouchableOpacity>
             </View>
             {listHDCT.length == 0 ?
-                <TouchableOpacity onPress={() => navigation.navigate("Home")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
-                : <FlatList
-                    data={listHDCT}
-                    keyExtractor={item => item._id}
-                    renderItem={renderItem}></FlatList>}
+                <TouchableOpacity onPress={() => navigation.navigate("DichVuScreen")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
+                : <View style={{ height: '69%' }}>
+                    <FlatList
+                        data={listHDCT}
+                        keyExtractor={item => item._id}
+                        renderItem={renderItem}></FlatList>
 
-            <View style={{ padding: 20, backgroundColor: 'pink', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text>Tổng tiền : {formatPrice(TongTien)}</Text>
-                <Pressable onPress={() => {
-                    if (idKhachHang == '') {
-                        ToastAndroid.show('Vui lòng chọn khách hàng', 0);
-                    } else {
-                        navigation.navigate('CheckBill', {
-                            tongTien: TongTien,
-                            khachHang: KhachHang,
-                            soDichVu: listHDCT.length
-                        })
-                    }
-                }}
-                    style={{ padding: 10, backgroundColor: 'blue' }}>
-                    <Text>Xác nhận</Text>
-                </Pressable>
-            </View>
+                    <View style={{
+                        padding: 20, backgroundColor: 'pink',
+                        flexDirection: 'row', justifyContent: 'space-between',
+                        alignItems: 'center', borderRadius: 10
+                    }}>
+                        <Text>Tổng tiền : {formatPrice(TongTien)}</Text>
+                        <Pressable onPress={() => {
+                            if (idKhachHang == '') {
+                                ToastAndroid.show('Vui lòng chọn khách hàng', 0);
+                            } else {
+                                navigation.navigate('CheckBill', {
+                                    tongTien: TongTien,
+                                    khachHang: KhachHang,
+                                    soDichVu: listHDCT.filter(hdct => hdct.soLuong > 0).length
+                                })
+                            }
+                        }}
+                            style={styles.button}>
+                            <Text>Xác nhận</Text>
+                        </Pressable>
+                    </View></View>}
+
+
         </View>
     )
 }
@@ -295,5 +315,6 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24
     },
-    btn: { width: 20, height: 20, backgroundColor: 'gray', alignItems: 'center', justifyContent: 'center', borderRadius: 4 }
+    button: { padding: 10, backgroundColor: 'green', borderRadius: 5, gap: 10, flexDirection: 'row' },
+    btn: { width: 20, height: 20, borderWidth: 1, alignItems: 'center', justifyContent: 'center', borderRadius: 4 }
 })
