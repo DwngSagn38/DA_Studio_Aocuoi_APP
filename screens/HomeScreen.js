@@ -12,10 +12,16 @@ const HomeScreen = ({ navigation }) => {
   const [Bill, setBill] = useState([]);
   const [idBill, setidBill] = useState('');
 
+  
   const checkIdBill = async () => {
     const id = await AsyncStorage.getItem('id_Bill');
     if (id != null) {
       setidBill(id);
+      console.log('Bill đang có: ', id);
+    }
+    else {
+      setidBill(null);
+      console.log('Không có bill');
     }
   }
 
@@ -75,11 +81,18 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
-  useEffect(() => {
-    getListDichVu();
-    retrieveData();
-    checkIdBill();
-  }, [navigation])
+    
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setTimeout(() => {
+      getListDichVu();
+      retrieveData();
+      checkIdBill();
+      }, 1);
+    });
+
+    return unsubscribe;
+  }, [navigation,idBill]);
 
   const renderItem = ({ item, index }) => {
     return (
