@@ -20,15 +20,22 @@ const TaoHoaDon = ({ navigation }) => {
 
     const getData = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        const url = `${URL}/hoadonchitiets?id_HoaDon=${id}`;
+        if(id!=null){
+            const url = `${URL}/hoadonchitiets?id_HoaDon=${id}`;
         try {
             const res = await fetch(url);
             const data = await res.json();
             setlistHDCT(data);
+            console.log('Id được tạo bill: ',id);
 
         } catch (error) {
             console.log(error);
         }
+        }
+        else{
+         await AsyncStorage.removeItem('id_Bill');
+        }
+        
     }
 
     const getKH = async () => {
@@ -88,7 +95,7 @@ const TaoHoaDon = ({ navigation }) => {
 
     const deleteHD = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        console.log(id);
+        console.log('Id xoá: ',id);
         const url = `${URL}/hoadons/delete/${id}`
         const res = await fetch(url, {
             method: "DELETE"
@@ -96,14 +103,37 @@ const TaoHoaDon = ({ navigation }) => {
         const data = await res.json();
         if (data.status == 200) {
             navigation.goBack();
-            await AsyncStorage.setItem('id_Bill', '');
+            await AsyncStorage.removeItem('id_Bill');
         }
         console.log('====================================');
         console.log(data.msg);
         console.log('====================================');
     }
 
-
+    const updateQuantity = async(id_CTHD, soLuongSave)=>{
+        try {
+            const res = await fetch(`${URL}/hoadonchitiets/put/${id_CTHD}`,{
+                method:'PUT',
+                body:JSON.stringify({soLuong:soLuongSave}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        
+            const data = await res.json();
+            if(data.status===200){
+                console.log(data);
+            }
+            else{
+                console.log(data);
+                console.log('Kiểm tra lại');
+            }
+        
+        } catch (error) {
+            console.log(error);
+            ToastAndroid.show('Lỗi',0)
+        }
+        }
     useEffect(() => {
         getDV();
         getKH();
@@ -135,22 +165,25 @@ const TaoHoaDon = ({ navigation }) => {
         const dichvu = ListDichVu.find(dv => dv._id == item.id_DichVu);
         const Quantity = quantities[item.id_DichVu] || 0; // Số lượng của mục đang được hiển thị
 
-        const decreaseQuantity = () => {
+        const decreaseQuantity =async(id_CTHD) => {
             if (Quantity > 0) {
                 setQuantities({
                     ...quantities,
                     [item.id_DichVu]: Quantity - 1
                 });
+                await updateQuantity(id_CTHD,Quantity-1)
             } else {
                 deleteHDCT(item.id_DichVu)
             }
         };
 
-        const increaseQuantity = () => {
+        const increaseQuantity =async(id_CTHD) => {
             setQuantities({
                 ...quantities,
                 [item.id_DichVu]: Quantity + 1
             });
+            await updateQuantity(id_CTHD,Quantity+1)
+
         };
 
         const totalPrice = item.giaTien * Quantity;
@@ -164,11 +197,11 @@ const TaoHoaDon = ({ navigation }) => {
 
                     <Text>Tổng tiền : {formatPrice(totalPrice)}</Text>
                     <View style={{ flexDirection: 'row', gap: 20 }}>
-                        <TouchableOpacity style={styles.btn} onPress={decreaseQuantity}>
+                        <TouchableOpacity style={styles.btn} onPress={()=>decreaseQuantity(item._id)}>
                             <Image source={require('../assets/image/tru.png')} style={{ width: 14, height: 14 }} />
                         </TouchableOpacity>
                         <Text>{Quantity}</Text>
-                        <TouchableOpacity style={styles.btn} onPress={increaseQuantity}>
+                        <TouchableOpacity style={styles.btn} onPress={()=>increaseQuantity(item._id)}>
                             <Image source={require('../assets/image/add.png')} style={{ width: 14, height: 14 }} />
                         </TouchableOpacity>
                     </View>
@@ -176,6 +209,9 @@ const TaoHoaDon = ({ navigation }) => {
             </View>
         )
     }
+
+
+    
     return (
         <View style={styles.container} >
             <View style={styles.header}>
