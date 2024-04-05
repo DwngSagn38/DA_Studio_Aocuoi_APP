@@ -182,7 +182,7 @@ const TaoHoaDon = ({ navigation }) => {
                 <TouchableOpacity onPress={() => { listHDCT.length == 0 ? deleteHD() : navigation.goBack() }}>
                     <Image source={require('../assets/image/back.png')} style={styles.icon} />
                 </TouchableOpacity>
-                <Text style={styles.title}>TẠO HÓA ĐỚN</Text>
+                <Text style={styles.title}>TẠO HÓA ĐƠN</Text>
                 <View />
             </View>
 

@@ -76,7 +76,7 @@ const ManageUser = ({ navigation, route }) => {
         const data = await reponse.json();
         console.log(data);
         if (data.status == 200) {
-          ToastAndroid.show(data.msg, 0);
+          Alert.alert(data.msg, 0);
           // await AsyncStorage.setItem('User', JSON.stringify(data.data));
           // navigation.goBack()
         }
@@ -120,18 +120,25 @@ const ManageUser = ({ navigation, route }) => {
         <View style={{ width: '100%', height: 230, justifyContent: 'center', alignItems: 'center', gap: 14 }}>
           <Image style={{ width: 200, height: 200, borderRadius: 30 }}
             source={User.avatar || selectedImage ? { uri: selectedImage || User.avatar } : require('../assets/image/pesonal.png')} />
-          <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chính sửa</Text>
+          <Text style={{ textAlign: 'center', fontSize: 16 }}>Bấm vào thông tin chi tiết để chỉnh sửa</Text>
         </View>
+        <TouchableOpacity onPress={PickImage}
+          style={{
+            backgroundColor: 'pink',
+            borderRadius: 10,
+            padding: 15,
+            marginHorizontal: 130,
+            marginTop: 10,
+            alignItems: 'center'
+          }}>
+          <Text>CHỌN ẢNH</Text>
+        </TouchableOpacity>
         <View style={styles.textInput}>
           <TextInput style={styles.input} value={Fullname} placeholder='Full name' onChangeText={(txt) => setFullname(txt)} />
           <TextInput style={styles.input} value={Email} placeholder='Email' onChangeText={(txt) => setEmail(txt)} />
           <TextInput style={styles.input} value={Address} placeholder='Address' onChangeText={(txt) => setAddress(txt)} />
           <TextInput style={styles.input} value={Phone} placeholder='Phone' onChangeText={(txt) => setPhone(txt)} />
         </View>
-        <TouchableOpacity onPress={PickImage}
-          style={styles.button}>
-          <Text>CHỌN ẢNH</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={saveProfile}>
           <Text>LƯU THÔNG TIN</Text>
         </TouchableOpacity></ScrollView>

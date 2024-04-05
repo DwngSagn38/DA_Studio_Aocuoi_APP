@@ -1,6 +1,7 @@
-import { Image, Modal, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Modal, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { URL } from './HomeScreen';
 
 const Profile = ({ navigation }) => {
   const [User, setUser] = useState([]);
@@ -9,6 +10,46 @@ const Profile = ({ navigation }) => {
   const [passNew, setPassNew] = useState('');
   const [checkPass, setCheckPass] = useState('');
 
+
+  const resetData = () => {
+    setPassOld('')
+    setPassNew('')
+    setCheckPass('')
+  }
+
+  const handleChangePassword = async () => {
+    // Kiểm tra các điều kiện đổi mật khẩu
+    if (passOld === '' || passNew === '' || checkPass === '') {
+      Alert.alert('Vui lòng không để trống thông tin!')
+      return
+    }
+    if (passNew !== checkPass) {
+      Alert.alert('Mật khẩu mới không khớp!')
+      return
+    }
+ 
+    const id = User._id
+    const url = `${URL}/newpass/${id}`
+    const dataPass = {
+      oldPass: passOld,
+      newPass: passNew
+    }
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(dataPass),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await res.json()
+    console.log(data);
+    Alert.alert(data.msg)
+    if (res.status == 200) {
+      navigation.navigate('LoginScreen')
+    }
+
+  }
   // lấy user từ AsyncStorage
   const retrieveData = async () => {
     try {
@@ -81,6 +122,7 @@ const Profile = ({ navigation }) => {
       >
         <View
           style={{
+            width: '100%',
             height: "100%",
             justifyContent: "center",
             alignItems: "center",
@@ -89,8 +131,7 @@ const Profile = ({ navigation }) => {
           <View
             style={{
               width: "90%",
-              margin: 20,
-              backgroundColor: "white",
+              backgroundColor: 'white',
               borderRadius: 20,
               padding: 35,
               alignItems: "center",
@@ -109,10 +150,10 @@ const Profile = ({ navigation }) => {
                 marginBottom: 10,
               }}
             >
-              Thêm nhân viên mới
+              Đổi mật khẩu
             </Text>
 
-            <View style={styles.khachHang}>
+            <View style={styles.pass}>
               <View style={{ gap: 5, marginTop: 10 }}>
                 <TextInput
                   style={{
@@ -161,7 +202,7 @@ const Profile = ({ navigation }) => {
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => { saveNV() }}
+                onPress={() => { handleChangePassword() }}
               >
                 <Text style={styles.textStyle}>Save</Text>
               </Pressable>
@@ -198,7 +239,12 @@ const styles = StyleSheet.create({
   textGray: {
     color: 'gray'
   },
-  header: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 30, marginBottom: 10 },
+  header: { 
+    flexDirection: 'row',
+     justifyContent: 'space-between', 
+     paddingVertical: 30, 
+     marginBottom: 10 
+    },
   icon: {
     width: 24,
     height: 24
@@ -206,5 +252,20 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold'
-  }
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    width: 100,
+    margin: 10,
+    alignItems: "center",
+  },
+  pass: {
+    justifyContent: "space-around",
+    width: "100%",
+  },
 })
