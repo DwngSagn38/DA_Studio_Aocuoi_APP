@@ -33,14 +33,16 @@ const ThongKeScreen = () => {
       const DoanhThuMonth = DoanhThuInYear.map((monthData) => {
         return Number(String(monthData.map((index) => index.totalRevenue / 1000)));
       });
-      setDoanhThuInMonth(DoanhThuMonth.filter(i => i > 0));
+      // setDoanhThuInMonth(DoanhThuMonth.filter(i => i > 0));
+      setDoanhThuInMonth(DoanhThuMonth);
 
       const month = [];
 
       for (let i = 0; i < DoanhThuMonth.length; i++) {
-        if (DoanhThuMonth[i] > 0) {
-          month.push(Month[i])
-        }
+        month.push(Month[i])
+        // if (DoanhThuMonth[i] > 0) {
+        //   month.push(Month[i])
+        // }
       }
       setgetMonth(month);
     }
