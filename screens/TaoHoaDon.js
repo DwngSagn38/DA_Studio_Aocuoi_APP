@@ -44,7 +44,7 @@ const TaoHoaDon = ({ navigation }) => {
             const res = await fetch(url);
             const data = await res.json();
             setlistKhachHang(data);
-
+console.log(data);
             if (idKhachHang != "") {
                 getInfo();
             }
@@ -135,14 +135,14 @@ const TaoHoaDon = ({ navigation }) => {
         }
     }
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setTimeout(() => {
+        // const unsubscribe = navigation.addListener('focus', () => {
+            // setTimeout(() => {
                 getDV();
                 getKH();
                 getData();
-            }, 1);
-        });
-        return unsubscribe;
+            // }, 1);
+        // });
+        // return unsubscribe;
 
 
     }, [idKhachHang, navigation])
