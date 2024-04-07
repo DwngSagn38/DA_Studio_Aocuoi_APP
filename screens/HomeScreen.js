@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const URL = 'http://192.168.100.205:3000';
+export const URL = 'http://192.168.1.105:3000';
 
 const HomeScreen = ({ navigation }) => {
 

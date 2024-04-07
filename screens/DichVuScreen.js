@@ -8,7 +8,6 @@ const DichVuScreen = ({ navigation }) => {
   const [search, setsearch] = useState('')
   const [typeDichVu, settypeDichVu] = useState(0);
 
-
   const getListDichVu = async () => {
     const url = `${URL}/dichvus`;
     try {
@@ -27,6 +26,7 @@ const DichVuScreen = ({ navigation }) => {
       console.log(err);
     }
   }
+
   const getListSearch = async () => {
     const url = `${URL}/dichvus/search?key=${search}`;
     try {
@@ -46,13 +46,10 @@ const DichVuScreen = ({ navigation }) => {
     }
   }
 
-
-
   const renderItem = ({ item, index }) => {
     return (
       <Pressable style={styles.card} onPress={() => { navigation.navigate('DichVuChiTiet', { item: item }) }}>
-        <Image style={styles.cardImg}
-          source={{ uri: item.hinhAnh }} />
+        <Image style={styles.cardImg} source={{ uri: item.hinhAnh }} />
         <Text style={styles.cardName}>{item.tenDichVu}</Text>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Text style={styles.cardPrice}>{formatPrice(item.giaTien)}</Text>
@@ -62,31 +59,25 @@ const DichVuScreen = ({ navigation }) => {
     )
   }
 
-
-  // hàm format price
   const formatPrice = (price) => {
-    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
     const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+    return formattedPrice + " đ";
   };
 
-
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // cập nhật giao diện ở đây
+    setTimeout(() => {
       getListDichVu();
-      getListSearch();;
-    });
+      getListSearch();
+    }, 1);
+  }, [search, typeDichVu, navigation]);
 
-    return unsubscribe;
-
-  }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>
       <View style={styles.search}>
         <Image source={require('../assets/image/search.png')} style={styles.icon} />
         <TextInput
-          placeholder='Search' style={{ marginStart: 10, marginEnd: 10, flex: 1 }}
+          placeholder='Search'
+          style={{ marginStart: 10, marginEnd: 10, flex: 1 }}
           onChangeText={(txt) => setsearch(txt)} />
       </View>
 
@@ -103,10 +94,9 @@ const DichVuScreen = ({ navigation }) => {
         numColumns={2}
         data={ListSearch.length > 0 ? ListSearch : ListDichVu}
         keyExtractor={item => item._id}
-        renderItem={renderItem}></FlatList>
+        renderItem={renderItem} />
 
-
-      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu', { item: '' }) }}
+      <TouchableOpacity onPress={() => { navigation.navigate('AddUpdateDichVu', { item: null }) }}
         style={styles.btnAdd}>
         <Image source={require('../assets/image/add.png')} style={styles.icon} />
       </TouchableOpacity>
@@ -114,7 +104,7 @@ const DichVuScreen = ({ navigation }) => {
   )
 }
 
-export default DichVuScreen
+export default DichVuScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -184,4 +174,4 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-})
+});
