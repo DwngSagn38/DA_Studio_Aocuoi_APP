@@ -63,7 +63,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
     const data = await res.json();
     console.log(data.data);
     if (data.status === 200) {
-      navigation.navigate('DichVuChiTiet', {item : item});
+      navigation.popToTop(2);
       ToastAndroid.show(data.msg, 0);
       resetData();
     } else {

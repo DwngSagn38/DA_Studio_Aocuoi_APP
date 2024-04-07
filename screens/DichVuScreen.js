@@ -65,15 +65,20 @@ const DichVuScreen = ({ navigation }) => {
 
   // hàm format price
   const formatPrice = (price) => {
-    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
-    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
 
 
   useEffect(() => {
-    getListDichVu();
-    getListSearch();
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getListDichVu();
+      getListSearch();;
+    });
+
+    return unsubscribe;
+
   }, [search, typeDichVu, navigation])
   return (
     <View style={styles.container}>

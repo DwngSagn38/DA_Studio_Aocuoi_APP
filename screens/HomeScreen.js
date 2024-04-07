@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const URL = 'http://10.24.52.22:3000';
+export const URL = 'http://192.168.100.3:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -45,9 +45,8 @@ const HomeScreen = ({ navigation }) => {
 
   // hàm format price
   const formatPrice = (price) => {
-    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
-    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
 
 
@@ -98,6 +97,7 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         scrollEnabled={true}
+        showsVerticalScrollIndicator= {false}
       >
         <View style={styles.viewSt}>
           <Text style={styles.title}>Chào ngày mới</Text>
@@ -106,18 +106,22 @@ const HomeScreen = ({ navigation }) => {
           <SlideShow />
         </View>
 
-        <View style={[styles.viewSt, { alignItems: 'center' }]}>
-          <Text style={{ color: 'blue', fontStyle: 'italic' }}>Công việc hôm nay</Text>
-          {idBill == ''
-            ? <Text style={{ color: 'blue', fontStyle: 'italic' }}
+        <View style={[styles.viewSt, { alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }]}>
+          <Text style={styles.button}
+          onPress={() => {
+            navigation.navigate('CongViecScreen')
+          }}>Công việc hôm nay</Text>
+          {idBill == null
+            ? <Text style={styles.button}
               onPress={() => { addBill(), navigation.navigate('TaoHoaDon') }}>
               Tạo hóa đơn ngay</Text>
-            : <Text style={{ color: 'blue', fontStyle: 'italic' }}
+            : <Text style={styles.button}
             onPress={() => { navigation.navigate('TaoHoaDon') }}>Bill</Text>}
         </View>
 
         <View style={styles.viewSt}>
-          <Text style={styles.title}>Dịch vụ trọn gói</Text>
+          <Text style={styles.title}>Dịch vụ trọn gói 
+          <Text style={{color: 'red'}}> (NEW)</Text></Text>
           <FlatList
             scrollEnabled={false}
             numColumns={2}
@@ -127,7 +131,8 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.viewSt}>
-          <Text style={styles.title}>Dịch vụ lẻ</Text>
+          <Text style={styles.title}>Dịch vụ lẻ
+          <Text style={{color: 'red'}}> (NEW)</Text></Text>
           <FlatList
             scrollEnabled={false}
             numColumns={2}
@@ -191,5 +196,12 @@ const styles = StyleSheet.create({
   cardPrice: {
     color: 'red',
     fontSize: 13
+  }, 
+  button: {
+    width: '40%',
+    textAlign:'center',
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 1,
   }
 })

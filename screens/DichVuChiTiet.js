@@ -85,19 +85,6 @@ const DichVuChiTiet = ({ navigation, route }) => {
     )
   }
 
-
-  // lấy user từ AsyncStorage
-  const retrieveData = async () => {
-    try {
-      const UserData = await AsyncStorage.getItem('User');
-      if (UserData != null) {
-        setUser(JSON.parse(UserData));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const deleteDichVu = async () => {
     const url = `${URL}/dichvus/delete/${idItem}`;
     const res = await fetch(url, {
@@ -140,7 +127,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
       } else {
         ToastAndroid.show(data.msg, 0);
       }
-    }else{
+    } else {
       addBill();
     }
   }
@@ -169,10 +156,15 @@ const DichVuChiTiet = ({ navigation, route }) => {
     }
   }
 
+  const formatPrice = (price) => {
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+
   useEffect(() => {
     item
   }, [item])
-  
+
 
   return (
     <View style={styles.container}>
@@ -196,7 +188,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
           <View style={styles.info}>
             <Text style={styles.textName}>{item.tenDichVu} - {item.type ? 'Dịch vụ lẻ' : 'Dịch vụ trọn gói'}</Text>
             <Text style={[styles.textName, { fontSize: 15 }]}>Thông Tin</Text>
-            <Text style={styles.price}>      Giá : <Text style={{ color: 'red', fontSize: 16 }}>{item.giaTien} đ</Text></Text>
+            <Text style={styles.price}>      Giá : <Text style={{ color: 'red', fontSize: 16 }}>{formatPrice(item.giaTien)}</Text></Text>
             {item.trangThai ? <Text style={[styles.price, { color: 'blue' }]}>      Có thể thuê</Text>
               : <Text style={[styles.price, { color: 'red' }]}>      Tạm ngừng cung cấp</Text>}
           </View>
@@ -216,8 +208,8 @@ const DichVuChiTiet = ({ navigation, route }) => {
         </ScrollView>
       </View>
 
-      <TouchableOpacity style={[styles.btn,{backgroundColor : !checkAdd ? 'green' : 'pink'}]} onPress={() => themVaoHoaDon()}>
-        <Text>{!checkAdd ? 'Thêm vào hóa đơn' : 'Tạo hóa đơn ngay'}</Text>
+      <TouchableOpacity style={[styles.btn, { backgroundColor: !checkAdd ? 'green' : 'pink' }]} onPress={() => themVaoHoaDon()}>
+        <Text>Tạo hóa đơn ngay</Text>
       </TouchableOpacity>
     </View>
   )

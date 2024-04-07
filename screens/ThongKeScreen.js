@@ -7,7 +7,7 @@ export const Month = ['Jan', 'Fer', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 export const DataFake = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
-const ThongKeScreen = () => {
+const ThongKeScreen = ({navigation}) => {
 
   const [loading, setloading] = useState(true);
 
@@ -50,9 +50,8 @@ const ThongKeScreen = () => {
 
   // hàm format price
   const formatPrice = (price) => {
-    // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
-    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
 
   const getThongKe = async () => {
@@ -75,10 +74,16 @@ const ThongKeScreen = () => {
 
   console.log(SoLieu);
 
+  
   useEffect(() => {
-    getDoanhThuInMonth();
-    getThongKe()
-  }, [year])
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getDoanhThuInMonth();
+      getThongKe()
+    });
+
+    return unsubscribe;
+  }, [year, navigation])
 
   const renderSoLieu = ({ item }) => {
     return (
