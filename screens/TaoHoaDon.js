@@ -44,7 +44,6 @@ const TaoHoaDon = ({ navigation }) => {
             const res = await fetch(url);
             const data = await res.json();
             setlistKhachHang(data);
-
             if (idKhachHang != "") {
                 getInfo();
             }
@@ -135,14 +134,14 @@ const TaoHoaDon = ({ navigation }) => {
         }
     }
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setTimeout(() => {
+        // const unsubscribe = navigation.addListener('focus', () => {
+            // setTimeout(() => {
                 getDV();
                 getKH();
                 getData();
-            }, 1);
-        });
-        return unsubscribe;
+            // }, 1);
+        // });
+        // return unsubscribe;
 
 
     }, [idKhachHang, navigation])
@@ -166,6 +165,7 @@ const TaoHoaDon = ({ navigation }) => {
         // Cập nhật tổng tiền
         setTongTien(totalBill);
     }, [quantities]);
+
 
     const renderItem = ({ item, index }) => {
         const dichvu = ListDichVu.find(dv => dv._id == item.id_DichVu);
@@ -262,7 +262,7 @@ const TaoHoaDon = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             {listHDCT.length == 0 ?
-                <TouchableOpacity onPress={() => navigation.navigate("DichVuScreen")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
+                <Text style={{textAlign: 'center'}}>Hóa đơn đang rỗng{'\n'} thêm ngay dịch vụ để tiếp tục</Text>
                 : <View style={{ height: '69%' }}>
                     <FlatList
                         data={listHDCT}

@@ -7,11 +7,12 @@ export const Month = ['Jan', 'Fer', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'S
 export const DataFake = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
-const ThongKeScreen = ({navigation}) => {
+const ThongKeScreen = ({ navigation }) => {
 
   const [loading, setloading] = useState(true);
 
   const [TongDoanhThu, setTongDoanhThu] = useState('');
+  const [TongDoanhThuYear, setTongDoanhThuYear] = useState('');
   const [TongKhachHang, setTongKhachHang] = useState('');
   const [TongHoaDon, setTongHoaDon] = useState('');
   const [TongHoaDonOk, setTongHoaDonOk] = useState('');
@@ -33,6 +34,17 @@ const ThongKeScreen = ({navigation}) => {
       const DoanhThuMonth = DoanhThuInYear.map((monthData) => {
         return Number(String(monthData.map((index) => index.totalRevenue / 1000)));
       });
+      const totalRevenue = DoanhThuInYear.map((month)=> {
+        return Number(String(month.map((index) => index.totalRevenue)));
+      });
+      // console.log(totalRevenue);
+
+      let doanhThuOfYear = 0;
+      for(let i = 0; i < totalRevenue.length; i++){
+        doanhThuOfYear += totalRevenue[i];
+      };
+      console.log(doanhThuOfYear);
+      setTongDoanhThuYear(doanhThuOfYear);
       // setDoanhThuInMonth(DoanhThuMonth.filter(i => i > 0));
       setDoanhThuInMonth(DoanhThuMonth);
 
@@ -69,28 +81,31 @@ const ThongKeScreen = ({navigation}) => {
       setTongDoanhThu(tk.Tongtien);
       setSoLieu(tk.ThongKeByMonth);
       setloading(false);
+      console.log(SoLieu);
     }
   }
 
-  console.log(SoLieu);
 
-  
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     // cập nhật giao diện ở đây
+  //     getDoanhThuInMonth();
+  //     getThongKe();
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation]);
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // cập nhật giao diện ở đây
-      getDoanhThuInMonth();
-      getThongKe()
-    });
-
-    return unsubscribe;
-  }, [year, navigation])
+    getDoanhThuInMonth();
+    getThongKe()
+  }, [year]);
 
   const renderSoLieu = ({ item }) => {
     return (
       <View style={{ marginTop: 10, padding: 20, borderWidth: 1, borderRadius: 8, width: '94%', marginHorizontal: 12 }}>
         <Text>Tháng {item._id.month} / {item._id.year}</Text>
         <Text>Có {item.TongSoKhachHang.length} khách hàng mua {item.TongHoaDon} hóa đơn
-          {'\n'}Doanh thu {formatPrice(item.TongTien)} vnđ</Text>
+          {'\n'}Doanh thu {formatPrice(item.TongTien)}</Text>
       </View>
     )
   }
@@ -120,7 +135,7 @@ const ThongKeScreen = ({navigation}) => {
           bezier // uốn công
           style={{ borderRadius: 16, marginVertical: 20 }}
         />
-        <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center', width: '100%', padding: 4, justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', gap: 14, alignItems: 'center', width: '100%', padding: 4, justifyContent: 'center', marginBottom: 15 }}>
           <TouchableOpacity onPress={() => setyear(year - 1)}>
             <Image source={require('../assets/image/back2.png')} style={{ width: 22, height: 22 }} />
           </TouchableOpacity>
@@ -138,30 +153,34 @@ const ThongKeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ alignItems: 'center' }}>
-        <ScrollView>
-          <DoanhThuLineChart />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={[styles.doanhThu, { color: 'green' }]}>Tổng doanh thu: {loading ? 0 : formatPrice(TongDoanhThu)}</Text>
+
 
           <View style={{ padding: 10, gap: 20, marginVertical: 20 }}>
-            <Text style={[styles.doanhThu, { color: 'green' }]}>Tổng doanh thu: {loading ? 0 : formatPrice(TongDoanhThu)}</Text>
             <View style={{ padding: 30, gap: 10, borderRadius: 10, borderWidth: 1 }}>
               <Text style={styles.doanhThu}>Thông số</Text>
               <Text style={styles.text}>Tổng hóa đơn                                                  {loading ? 0 : TongHoaDon}</Text>
               <Text style={styles.text}>Hóa đơn hoàn thành                                      {loading ? 0 : TongHoaDonOk}</Text>
               <Text style={styles.text}>Hóa đơn đang chờ                                           {loading ? 0 : TongHoaDonLoad}</Text>
               <Text style={styles.text}>Hóa đơn đã hủy                                                {loading ? 0 : TongHoaDonFail}</Text>
-              <Text style={styles.text}>Tổng số khách                                                {loading ? 0 : TongHoaDon}</Text>
+              <Text style={styles.text}>Tổng số khách                                                {loading ? 0 : TongKhachHang}</Text>
             </View>
           </View>
 
-
-          <Text style={styles.doanhThu}>Số liệu thống kê theo tháng</Text>
+          <DoanhThuLineChart />
+          <Text style={[styles.doanhThu, { fontSize: 15 }]}>
+            Doanh thu năm {year} : <Text style={{color: 'red', textDecorationLine: 'underline' }}>{loading ? 0 : formatPrice(TongDoanhThuYear)}</Text></Text>
 
           {loading ? <ActivityIndicator color={'black'} />
             :
-            <FlatList
-              scrollEnabled={false}
-              data={SoLieu}
-              renderItem={renderSoLieu}></FlatList>}
+            <View style={{marginTop: 30}}>
+              <Text style={styles.doanhThu}>Số liệu thống kê theo tháng</Text>
+              <FlatList
+                scrollEnabled={false}
+                data={SoLieu}
+                renderItem={renderSoLieu}></FlatList>
+            </View>}
 
         </ScrollView>
       </View>
@@ -179,5 +198,5 @@ const styles = StyleSheet.create({
   text: {
     textDecorationLine: 'underline'
   },
-  doanhThu: { textAlign: 'center', fontSize: 16, fontWeight: 'bold' }
+  doanhThu: { textAlign: 'center', fontSize: 18, fontWeight: 'bold' }
 })

@@ -45,7 +45,7 @@ const HoaDonScreen = ({ navigation }) => {
     const unsubscribe = navigation.addListener('focus', () => {
       // cập nhật giao diện ở đây
       getData();
-    getKhachHangs();
+      getKhachHangs();
     });
 
     return unsubscribe;
@@ -69,11 +69,11 @@ const HoaDonScreen = ({ navigation }) => {
     return `${year}-${month}-${day}`;
   }
 
-    // hàm format price
-    const formatPrice = (price) => {
-      // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
-      return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-    };
+  // hàm format price
+  const formatPrice = (price) => {
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
 
   const renderItem = ({ item }) => {
 

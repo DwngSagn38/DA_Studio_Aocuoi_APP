@@ -75,9 +75,13 @@ const HomeScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    getListDichVu();
-    retrieveData();
-    checkIdBill();
+    const unsubscribe = navigation.addListener('focus', () => {
+      getListDichVu();
+      retrieveData();
+      checkIdBill();
+    });
+    return unsubscribe;
+
   }, [navigation])
 
   const renderItem = ({ item, index }) => {
@@ -97,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         scrollEnabled={true}
-        showsVerticalScrollIndicator= {false}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.viewSt}>
           <Text style={styles.title}>Chào ngày mới</Text>
@@ -108,20 +112,20 @@ const HomeScreen = ({ navigation }) => {
 
         <View style={[styles.viewSt, { alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }]}>
           <Text style={styles.button}
-          onPress={() => {
-            navigation.navigate('CongViecScreen')
-          }}>Công việc hôm nay</Text>
+            onPress={() => {
+              navigation.navigate('CongViecScreen')
+            }}>Công việc hôm nay</Text>
           {idBill == null
             ? <Text style={styles.button}
               onPress={() => { addBill(), navigation.navigate('TaoHoaDon') }}>
               Tạo hóa đơn ngay</Text>
             : <Text style={styles.button}
-            onPress={() => { navigation.navigate('TaoHoaDon') }}>Bill</Text>}
+              onPress={() => { navigation.navigate('TaoHoaDon') }}>Bill</Text>}
         </View>
 
         <View style={styles.viewSt}>
-          <Text style={styles.title}>Dịch vụ trọn gói 
-          <Text style={{color: 'red'}}> (NEW)</Text></Text>
+          <Text style={styles.title}>Dịch vụ trọn gói
+            <Text style={{ color: 'red' }}> (NEW)</Text></Text>
           <FlatList
             scrollEnabled={false}
             numColumns={2}
@@ -132,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
 
         <View style={styles.viewSt}>
           <Text style={styles.title}>Dịch vụ lẻ
-          <Text style={{color: 'red'}}> (NEW)</Text></Text>
+            <Text style={{ color: 'red' }}> (NEW)</Text></Text>
           <FlatList
             scrollEnabled={false}
             numColumns={2}
@@ -196,10 +200,10 @@ const styles = StyleSheet.create({
   cardPrice: {
     color: 'red',
     fontSize: 13
-  }, 
+  },
   button: {
     width: '40%',
-    textAlign:'center',
+    textAlign: 'center',
     borderRadius: 10,
     padding: 10,
     borderWidth: 1,
