@@ -106,9 +106,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
       const HDCT = {
         id_HoaDon: id_Bill,
         id_DichVu: item._id,
-        soLuong: 1,
         giaTien: item.giaTien,
-        ghiChu: "",
       }
 
       const res = await fetch(url, {
@@ -156,6 +154,16 @@ const DichVuChiTiet = ({ navigation, route }) => {
     }
   }
 
+  const formatPrice = (price) => {
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+
+  useEffect(() => {
+    item
+  }, [item])
+
+
   return (
     <View style={styles.container}>
       <View style={{ height: '70%' }}>
@@ -166,20 +174,20 @@ const DichVuChiTiet = ({ navigation, route }) => {
           <View style={styles.header}>
             <TouchableOpacity style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 4 }}
               onPress={() => { navigation.goBack() }}>
-              <Image source={require('../assets/image/back.png')} style={styles.icon} tintColor={'gray'} />
+              <Image source={require('../assets/image/back.png')} style={styles.icon} tintColor={'white'} />
             </TouchableOpacity>
             <Text style={styles.title}>{item.tenDichVu}</Text>
             <TouchableOpacity style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 6, padding: 4 }}
               onPress={() => { setoptionVisible(true) }}>
-              <Image source={require('../assets/image/open-menu.png')} style={styles.icon} tintColor={'gray'} />
+              <Image source={require('../assets/image/open-menu.png')} style={styles.icon} tintColor={'white'} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.info}>
             <Text style={styles.textName}>{item.tenDichVu} - {item.type ? 'Dịch vụ lẻ' : 'Dịch vụ trọn gói'}</Text>
             <Text style={[styles.textName, { fontSize: 15 }]}>Thông Tin</Text>
-            <Text style={styles.price}>      Giá : <Text style={{ color: 'red', fontSize: 16 }}>{item.giaTien} đ</Text></Text>
-            {item.trangThai ? <Text style={[styles.price, { color: 'blue' }]}>      Có thể thuê</Text>
+            <Text style={styles.price}>      Giá : <Text style={{ color: 'red', fontSize: 16 }}>{formatPrice(item.giaTien)}</Text></Text>
+            {item.trangThai ? <Text style={[styles.price, { color: 'yellow' }]}>      Có thể thuê</Text>
               : <Text style={[styles.price, { color: 'red' }]}>      Tạm ngừng cung cấp</Text>}
           </View>
 
@@ -217,9 +225,9 @@ const styles = StyleSheet.create({
     height: 20
   },
   title: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: 'white'
+    color: 'black'
   },
   btn: {
     height: 50,
@@ -239,7 +247,10 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   info: {
-    backgroundColor: 'rgba(0,0,0,0.3)', height: '26%', borderTopLeftRadius: 20, borderTopRightRadius: 20,
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    height: '26%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     padding: 18,
     gap: 12
   },

@@ -77,8 +77,11 @@ const ManageUser = ({ navigation, route }) => {
         console.log(data);
         if (data.status == 200) {
           Alert.alert(data.msg, 0);
-          // await AsyncStorage.setItem('User', JSON.stringify(data.data));
-          // navigation.goBack()
+          navigation.goBack()
+          setTimeout(() => {
+            navigation.navigate('LoginScreen')
+            ToastAndroid.show('Đăng nhập lại để cập nhật thông tin',0)
+          }, 500);
         }
         else {
           ToastAndroid.show(data.msg, 0);

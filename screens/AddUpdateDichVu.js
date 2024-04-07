@@ -6,16 +6,16 @@ import { URL } from './HomeScreen';
 
 const AddUpdateDichVu = ({ navigation, route }) => {
   const { item } = route.params;
+  const isAdding = !item;
 
   const [selectedImage, setselectedImage] = useState(null);
-
   const [TenDichVu, setTenDichVu] = useState('');
   const [GiaTien, setGiaTien] = useState('');
   const [MoTa, setMoTa] = useState('');
   const [TrangThai, setTrangThai] = useState(true);
   const [Type, setType] = useState(true);
   const [checkAdd, setcheckAdd] = useState(true);
-  const [idItem, setidItem] = useState('');
+  const [idItem, setidItem] = useState(item?._id);
 
   const PickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -32,16 +32,14 @@ const AddUpdateDichVu = ({ navigation, route }) => {
     }
   }
 
-  const addDichVu = async () => {
+  const addOrUpdateDichVu = async () => {
     const urladd = `${URL}/dichvus/post`;
     const urlupdate = `${URL}/dichvus/put/${idItem}`;
+    const linkAPI = isAdding ? urladd : urlupdate;
+    const method = isAdding ? 'POST' : 'PUT';
 
-    const linkAPI = checkAdd ? urladd : urlupdate;
-    const method = checkAdd ? 'POST' : 'PUT';
-
-    if (TenDichVu == '' || GiaTien == '') {
-      ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', 0);
-      return;
+    if (TenDichVu == '' || GiaTien == null) {
+      return ToastAndroid.show('Vui lòng nhập đầy đủ thông tin', 0);
     }
     const NewDichVu = {
       tenDichVu: TenDichVu,
@@ -63,17 +61,19 @@ const AddUpdateDichVu = ({ navigation, route }) => {
     const data = await res.json();
     console.log(data.data);
     if (data.status === 200) {
-      navigation.popToTop(2);
-      ToastAndroid.show(data.msg, 0);
+      setTimeout(() => {
+        navigation.popToTop(2);
+      }, 1500);
+      
       resetData();
+      ToastAndroid.show(data.msg, 0);
     } else {
       ToastAndroid.show(data.msg, 0);
     }
   }
 
   useEffect(() => {
-    if (item != null) {
-      setidItem(item._id)
+    if (item != null && item != undefined) {
       setTenDichVu(item.tenDichVu);
       setGiaTien(item.giaTien);
       setMoTa(item.moTa);
@@ -82,7 +82,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
       setselectedImage(item.hinhAnh);
       setcheckAdd(false);
     }
-  }, [navigation])
+  }, [navigation, checkAdd])
   
 
   const resetData = () => {
@@ -90,8 +90,9 @@ const AddUpdateDichVu = ({ navigation, route }) => {
     setMoTa('');
     setTenDichVu('');
     setType(true);
-    setselectedImage('')
+    setselectedImage('');
   }
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -117,13 +118,13 @@ const AddUpdateDichVu = ({ navigation, route }) => {
             <TextInput style={styles.input}
               placeholder={'Tên Dịch vụ'}
               onChangeText={(txt) => setTenDichVu(txt)}
-              value={TenDichVu || ''} />
+              value={TenDichVu} />
             <Text>Giá tiền</Text>
             <TextInput style={styles.input}
               placeholder={'Giá tiền'}
               keyboardType='numeric'
               onChangeText={(txt) => setGiaTien(txt)}
-              value={String(GiaTien) || ''}
+              value={String(GiaTien)}
             />
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
@@ -143,7 +144,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
               placeholder={'Mô tả'}
               multiline={true}
               onChangeText={(txt) => setMoTa(txt)}
-              value={MoTa || ''} />
+              value={MoTa} />
           </View>
 
           <TouchableOpacity onPress={PickImage}
@@ -151,9 +152,9 @@ const AddUpdateDichVu = ({ navigation, route }) => {
             <Text>CHỌN ẢNH</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={addDichVu}
+          <TouchableOpacity onPress={addOrUpdateDichVu}
             style={styles.button}>
-            <Text>LƯU THÔNG TIN</Text>
+            <Text>{isAdding ? 'THÊM DỊCH VỤ' : 'CẬP NHẬT DỊCH VỤ'}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -161,7 +162,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   )
 }
 
-export default AddUpdateDichVu
+export default AddUpdateDichVu;
 
 const styles = StyleSheet.create({
   container: {
@@ -190,7 +191,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FFC0CB',
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'pink'
   }
-})
+});

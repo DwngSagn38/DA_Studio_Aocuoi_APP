@@ -44,7 +44,6 @@ const TaoHoaDon = ({ navigation }) => {
             const res = await fetch(url);
             const data = await res.json();
             setlistKhachHang(data);
-
             if (idKhachHang != "") {
                 getInfo();
             }
@@ -95,19 +94,23 @@ const TaoHoaDon = ({ navigation }) => {
 
     const deleteHD = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        console.log('Id xoá: ', id);
-        const url = `${URL}/hoadons/delete/${id}`
-        const res = await fetch(url, {
-            method: "DELETE"
-        });
-        const data = await res.json();
-        if (data.status == 200) {
-            navigation.goBack();
-            await AsyncStorage.removeItem('id_Bill');
+        if (id != null && id != undefined) {
+            console.log('Id xoá: ', id);
+            const url = `${URL}/hoadons/delete/${id}`
+            const res = await fetch(url, {
+                method: "DELETE"
+            });
+            const data = await res.json();
+            if (data.status == 200) {
+                navigation.goBack();
+                await AsyncStorage.setItem('id_Bill', '');
+            }
+            console.log('====================================');
+            console.log(data.msg);
+            console.log('====================================');
+        }else{
+            navigation.goBack(); 
         }
-        console.log('====================================');
-        console.log(data.msg);
-        console.log('====================================');
     }
 
     const updateQuantity = async (id_CTHD, soLuongSave) => {
@@ -135,23 +138,22 @@ const TaoHoaDon = ({ navigation }) => {
         }
     }
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setTimeout(() => {
-                getDV();
-                getKH();
-                getData();
-            }, 1);
-        });
-        return unsubscribe;
+        // const unsubscribe = navigation.addListener('focus', () => {
+        // setTimeout(() => {
+        getDV();
+        getKH();
+        getData();
+        // }, 1);
+        // });
+        // return unsubscribe;
 
 
     }, [idKhachHang, navigation])
 
     // hàm format price
     const formatPrice = (price) => {
-        // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
-        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+        // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     };
 
 
@@ -167,6 +169,7 @@ const TaoHoaDon = ({ navigation }) => {
         // Cập nhật tổng tiền
         setTongTien(totalBill);
     }, [quantities]);
+
 
     const renderItem = ({ item, index }) => {
         const dichvu = ListDichVu.find(dv => dv._id == item.id_DichVu);
@@ -263,7 +266,7 @@ const TaoHoaDon = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             {listHDCT.length == 0 ?
-                <TouchableOpacity onPress={() => navigation.navigate("DichVuScreen")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
+                <Text style={{ textAlign: 'center' }}>Hóa đơn đang rỗng{'\n'} thêm ngay dịch vụ để tiếp tục</Text>
                 : <View style={{ height: '69%' }}>
                     <FlatList
                         data={listHDCT}
