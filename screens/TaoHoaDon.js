@@ -94,19 +94,23 @@ const TaoHoaDon = ({ navigation }) => {
 
     const deleteHD = async () => {
         const id = await AsyncStorage.getItem('id_Bill');
-        console.log('Id xoá: ', id);
-        const url = `${URL}/hoadons/delete/${id}`
-        const res = await fetch(url, {
-            method: "DELETE"
-        });
-        const data = await res.json();
-        if (data.status == 200) {
-            navigation.goBack();
-            await AsyncStorage.setItem('id_Bill', '');
+        if (id != null && id != undefined) {
+            console.log('Id xoá: ', id);
+            const url = `${URL}/hoadons/delete/${id}`
+            const res = await fetch(url, {
+                method: "DELETE"
+            });
+            const data = await res.json();
+            if (data.status == 200) {
+                navigation.goBack();
+                await AsyncStorage.setItem('id_Bill', '');
+            }
+            console.log('====================================');
+            console.log(data.msg);
+            console.log('====================================');
+        }else{
+            navigation.goBack(); 
         }
-        console.log('====================================');
-        console.log(data.msg);
-        console.log('====================================');
     }
 
     const updateQuantity = async (id_CTHD, soLuongSave) => {
@@ -135,11 +139,11 @@ const TaoHoaDon = ({ navigation }) => {
     }
     useEffect(() => {
         // const unsubscribe = navigation.addListener('focus', () => {
-            // setTimeout(() => {
-                getDV();
-                getKH();
-                getData();
-            // }, 1);
+        // setTimeout(() => {
+        getDV();
+        getKH();
+        getData();
+        // }, 1);
         // });
         // return unsubscribe;
 
@@ -150,7 +154,7 @@ const TaoHoaDon = ({ navigation }) => {
     const formatPrice = (price) => {
         // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
         return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-      };
+    };
 
 
 
@@ -262,7 +266,7 @@ const TaoHoaDon = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             {listHDCT.length == 0 ?
-                <Text style={{textAlign: 'center'}}>Hóa đơn đang rỗng{'\n'} thêm ngay dịch vụ để tiếp tục</Text>
+                <Text style={{ textAlign: 'center' }}>Hóa đơn đang rỗng{'\n'} thêm ngay dịch vụ để tiếp tục</Text>
                 : <View style={{ height: '69%' }}>
                     <FlatList
                         data={listHDCT}

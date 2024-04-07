@@ -86,15 +86,16 @@ const ThongKeScreen = ({ navigation }) => {
   }
 
 
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     // cập nhật giao diện ở đây
-  //     getDoanhThuInMonth();
-  //     getThongKe();
-  //   });
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // cập nhật giao diện ở đây
+      getDoanhThuInMonth();
+      getThongKe();
+    });
 
-  //   return unsubscribe;
-  // }, [navigation]);
+    return unsubscribe;
+  }, [navigation]);
+  
   useEffect(() => {
     getDoanhThuInMonth();
     getThongKe()

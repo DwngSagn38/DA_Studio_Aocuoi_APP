@@ -18,6 +18,7 @@ import CongViecScreen from '../screens/CongViecScreen';
 import AddUpdateDichVu from '../screens/AddUpdateDichVu';
 import TaoHoaDon from '../screens/TaoHoaDon';
 import CheckBill from '../screens/CheckBill';
+import DetailBill from '../screens/DetailBill';
 
 
 
@@ -81,6 +82,7 @@ const MainNavigator = () => {
             <Stack.Screen name='TaoHoaDon' component={TaoHoaDon} />
             <Stack.Screen name='CheckBill' component={CheckBill} />
             <Stack.Screen name='DichVuScreen' component={DichVuScreen} />
+            <Stack.Screen name='DetailBill' component={DetailBill} />
         </Stack.Navigator>
     )
 }
