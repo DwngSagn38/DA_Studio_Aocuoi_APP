@@ -44,7 +44,7 @@ const TaoHoaDon = ({ navigation }) => {
             const res = await fetch(url);
             const data = await res.json();
             setlistKhachHang(data);
-console.log(data);
+            console.log(data);
             if (idKhachHang != "") {
                 getInfo();
             }
@@ -135,14 +135,14 @@ console.log(data);
         }
     }
     useEffect(() => {
-        // const unsubscribe = navigation.addListener('focus', () => {
-            // setTimeout(() => {
-                getDV();
-                getKH();
-                getData();
-            // }, 1);
-        // });
-        // return unsubscribe;
+        const unsubscribe = navigation.addListener('focus', () => {
+        setTimeout(() => {
+        getDV();
+        getKH();
+        getData();
+        }, 1);
+        });
+        return unsubscribe;
 
 
     }, [idKhachHang, navigation])
@@ -243,7 +243,8 @@ console.log(data);
                             setidKhachHang(itemValue)
                         }
                     }}>
-                    <Picker.Item label='Chọn khách hàng' value='' />
+       
+                    <Picker.Item label='Chọn khách hàng' value=''/>
                     {listKhachHang.map((kh) => (
                         <Picker.Item key={kh._id} label={kh.tenKhachHang} value={kh._id} />
                     ))}
@@ -256,14 +257,14 @@ console.log(data);
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                 <View />
                 <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>Dịch vụ yêu cầu</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('DichVuScreen')}
+                <TouchableOpacity onPress={() => {navigation.navigate('DichVuScreen')}}
                     style={[styles.button, { backgroundColor: 'white' }]}>
                     <Image source={require('../assets/image/cloud.png')} style={styles.icon} />
                     <Text>Thêm dịch vụ</Text>
                 </TouchableOpacity>
             </View>
             {listHDCT.length == 0 ?
-                <TouchableOpacity onPress={() => navigation.navigate("DichVuScreen")}><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() =>{navigation.navigate("DichVuScreen")} }><Text>Chưa có dịch vụ thêm ngay</Text></TouchableOpacity>
                 : <View style={{ height: '69%' }}>
                     <FlatList
                         data={listHDCT}
