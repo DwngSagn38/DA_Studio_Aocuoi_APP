@@ -10,19 +10,18 @@ const CheckBill = ({ navigation, route }) => {
 
     // hàm format price
     const formatPrice = (price) => {
-        // Chuyển đổi số tiền sang chuỗi và thêm dấu phẩy phân tách hàng nghìn
-        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        return formattedPrice + " đ"; // Thêm ký hiệu VNĐ
+        // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+        return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     };
 
-    const finalBill = async () => {
+    const finalBill = async (status) => {
         const id = await AsyncStorage.getItem('id_Bill');
         const url = `${URL}/hoadons/update/${id}`;
 
         const FinalBill = {
             id_KhachHang: khachHang._id,
             tongTien: tongTien,
-            trangThai: 0
+            trangThai: status
         }
 
         const res = await fetch(url, {
@@ -61,9 +60,13 @@ const CheckBill = ({ navigation, route }) => {
 
 
 
-            <TouchableOpacity onPress={() => finalBill()}
+            <TouchableOpacity onPress={() => finalBill(1)}
+                style={{ padding: 20, backgroundColor: 'green' }}>
+                <Text>Đã hoàn thành thanh toán</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => finalBill(0)}
                 style={{ padding: 20, backgroundColor: 'pink' }}>
-                <Text>Xác nhận tạo</Text>
+                <Text>Chờ xử lý</Text>
             </TouchableOpacity>
         </View>
     )
@@ -87,4 +90,8 @@ const styles = StyleSheet.create({
         width: 24,
         height: 24
     },
+    title: {
+        fontSize: 16,
+        fontWeight: "bold",
+      },
 })

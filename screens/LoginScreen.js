@@ -109,7 +109,7 @@ const LoginScreen = ({ navigation }) => {
                             placeholder='Nhập username' onChangeText={(txt) => {
                                 setuser(txt)
                             }}
-                            value={user} />
+                            value={user.toLocaleLowerCase().trim()} />
                     </View>
                     <View style={{ gap: 10, width: '90%' }}>
                         <Text style={{ fontSize: 13, color: 'gray' }}>PASSWORD</Text>
@@ -118,7 +118,7 @@ const LoginScreen = ({ navigation }) => {
                                 placeholder='Nhập mật khẩu' onChangeText={(txt) => {
                                     setpass(txt)
                                 }}
-                                value={pass} />
+                                value={pass.toLocaleLowerCase().trim()} />
                             <TouchableOpacity onPress={() => setshowPass(!showPass)}>
                                 <Image style={{ width: 22, height: 22 }}
                                     source={showPass ? require('../assets/image/visible.png') : require('../assets/image/invisible.png')} />
@@ -137,7 +137,13 @@ const LoginScreen = ({ navigation }) => {
                     <TouchableOpacity style={styles.btn} onPress={() => { Login() }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Đăng nhập</Text>
                     </TouchableOpacity>
-                    <Text style={{ textAlign: 'center', color: 'pink' }}>________________<Text style={{ color: 'black' }}>Hoặc</Text>________________</Text>
+                    <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                        <View style={{borderWidth:1,borderColor:'pink',width:'35%',marginHorizontal:10}}></View>
+                        <Text>Hoặc</Text>
+                        <View style={{borderWidth:1,borderColor:'pink',width:'35%',marginHorizontal:10}}></View>
+
+
+                    </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity>
                             <Image style={styles.image}

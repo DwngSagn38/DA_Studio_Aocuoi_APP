@@ -12,12 +12,12 @@ import ManageUser from '../screens/ManageUser';
 import KhachHangScreen from '../screens/KhachHangScreen';
 import OptionMenu from '../screens/OptionMenu';
 import ListNhanVien from '../screens/ListNhanVien';
-import ThemNhanVien from '../screens/ThemNhanVien';
 import Header from './Header';
 import CongViecScreen from '../screens/CongViecScreen';
 import AddUpdateDichVu from '../screens/AddUpdateDichVu';
 import TaoHoaDon from '../screens/TaoHoaDon';
 import CheckBill from '../screens/CheckBill';
+import DetailBill from '../screens/DetailBill';
 
 
 
@@ -73,7 +73,6 @@ const MainNavigator = () => {
             <Stack.Screen name='Profile' component={Profile} />
             <Stack.Screen name='ManageUser' component={ManageUser} />
             <Stack.Screen name='KhachHangScreen' component={KhachHangScreen} />
-            <Stack.Screen name='ThemNhanVien' component={ThemNhanVien} />
             <Stack.Screen name='ListNhanVien' component={ListNhanVien} />
             <Stack.Screen name='OptionMenu' component={OptionMenu} />
             <Stack.Screen name='CongViecScreen' component={CongViecScreen} />
@@ -81,6 +80,7 @@ const MainNavigator = () => {
             <Stack.Screen name='TaoHoaDon' component={TaoHoaDon} />
             <Stack.Screen name='CheckBill' component={CheckBill} />
             <Stack.Screen name='DichVuScreen' component={DichVuScreen} />
+            <Stack.Screen name='DetailBill' component={DetailBill} />
         </Stack.Navigator>
     )
 }

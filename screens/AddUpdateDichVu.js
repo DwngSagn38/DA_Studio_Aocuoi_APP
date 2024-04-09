@@ -15,7 +15,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   const [TrangThai, setTrangThai] = useState(true);
   const [Type, setType] = useState(true);
   const [checkAdd, setcheckAdd] = useState(true);
-  const [idItem, setidItem] = useState('');
+  const [idItem, setidItem] = useState(item?._id);
 
   const PickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -73,8 +73,7 @@ const AddUpdateDichVu = ({ navigation, route }) => {
   }
 
   useEffect(() => {
-    if (item != null) {
-      setidItem(item._id)
+    if (item != null && item != undefined) {
       setTenDichVu(item.tenDichVu);
       setGiaTien(item.giaTien);
       setMoTa(item.moTa);

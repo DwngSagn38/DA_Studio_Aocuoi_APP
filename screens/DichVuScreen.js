@@ -60,16 +60,26 @@ const DichVuScreen = ({ navigation }) => {
   }
 
   const formatPrice = (price) => {
-    const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return formattedPrice + " đ";
+    // Sử dụng phương thức toLocaleString để định dạng giá theo định dạng tiền tệ của Việt Nam (VND)
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      getListDichVu();
-      getListSearch();
-    }, 1);
+    const unsubscribe = navigation.addListener('focus', () => {
+      setTimeout(() => {
+        getListDichVu();
+        getListSearch();
+      }, 1);
+    });
+
+    return unsubscribe;
+
   }, [search, typeDichVu, navigation]);
+
+  useEffect(() => {
+    getListDichVu();
+    getListSearch();
+  }, [search, typeDichVu]);
 
   return (
     <View style={styles.container}>
@@ -91,6 +101,7 @@ const DichVuScreen = ({ navigation }) => {
       </View>
 
       <FlatList
+      showsVerticalScrollIndicator={false}
         numColumns={2}
         data={ListSearch.length > 0 ? ListSearch : ListDichVu}
         keyExtractor={item => item._id}

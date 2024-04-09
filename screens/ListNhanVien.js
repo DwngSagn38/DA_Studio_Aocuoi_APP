@@ -1,7 +1,7 @@
 import { FlatList, Image, Modal, Pressable, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
-
+import { getDataUser } from './OptionMenu';
 const ListNhanVien = ({ navigation }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -16,6 +16,7 @@ const ListNhanVien = ({ navigation }) => {
     const [Avatar, setAvatar] = useState('');
     const [Ghichu, setGhichu] = useState('');
     const [block, setBlock] = useState(false);
+    const [userProfile, setuserProfile] = useState([])
 
 
 
@@ -30,21 +31,21 @@ const ListNhanVien = ({ navigation }) => {
                 }}>
                 <View style={{ height: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)' }}>
                     <View style={{ width: '90%', margin: 20, backgroundColor: 'white', borderRadius: 20, padding: 25, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2, }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5, }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>Bạn muốn {block?'unblock':'block'} tài khoản này?</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 10 }}>Bạn muốn {block ? 'unblock' : 'block'} tài khoản này?</Text>
                         <View style={[{ marginTop: 10, width: '100%', gap: 9 }]}>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                             {block ? <Pressable
                                 style={[styles.button, { backgroundColor: 'green' }]}
-                                onPress={() => {handleBlock(idNhanVien),setModalBlock(!modalBlock),getListNV()}}>
-                                 <Text style={styles.textStyle}>Có</Text>
+                                onPress={() => { handleBlock(idNhanVien), setModalBlock(!modalBlock), getListNV() }}>
+                                <Text style={styles.textStyle}>Có</Text>
                             </Pressable> : <Pressable
                                 style={[styles.button, { backgroundColor: 'red' }]}
-                                onPress={() => {handleBlock(idNhanVien),setModalBlock(!modalBlock),getListNV()}}>
+                                onPress={() => { handleBlock(idNhanVien), setModalBlock(!modalBlock), getListNV() }}>
                                 <Text style={styles.textStyle}>Có</Text>
                             </Pressable>}
 
-                            
+
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModalBlock(!modalBlock)}>
@@ -59,18 +60,18 @@ const ListNhanVien = ({ navigation }) => {
     const handleBlock = async (idNhanVien) => {
         const actions = block ? 'unblock' : 'block';
 
-        const reponse = await fetch(`${URL}/nhanviens/${actions}/${idNhanVien}`,{
-            method:'PUT',
+        const reponse = await fetch(`${URL}/nhanviens/${actions}/${idNhanVien}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body:JSON.stringify({block:!block})
+            body: JSON.stringify({ block: !block })
         })
         const data = await reponse.json();
-        if(data.status!==200){
+        if (data.status !== 200) {
             ToastAndroid.show('Lỗi')
-        }else{
-            ToastAndroid.show(data.msg,0)
+        } else {
+            ToastAndroid.show(data.msg, 0)
             setBlock(!block)
         }
     }
@@ -81,7 +82,7 @@ const ListNhanVien = ({ navigation }) => {
             const res = await fetch(url);
             const data = await res.json();
             const list = data;
-            setdata(list.filter(nv=> nv.role == 0));
+            setdata(list.filter(nv => nv.role == 0));
         } catch (err) {
             console.log(err);
         }
@@ -89,7 +90,13 @@ const ListNhanVien = ({ navigation }) => {
 
 
     useEffect(() => {
-        getListNV()
+        getListNV();
+        const loadData = async () => {
+            const data = await getDataUser();
+            console.log(data);
+            setuserProfile(data)
+        }
+        loadData()
     }, [])
 
 
@@ -135,11 +142,13 @@ const ListNhanVien = ({ navigation }) => {
             </View>
 
             <FlatList
+            showsVerticalScrollIndicator={false}
                 data={data}
                 keyExtractor={item => item._id}
                 renderItem={renderItem}></FlatList>
 
             <BlockUser />
+
             <Modal style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}
                 animationType="slide"
                 transparent={true}
@@ -166,15 +175,15 @@ const ListNhanVien = ({ navigation }) => {
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
-                            {block ? <Pressable
-                                style={[styles.button, { backgroundColor: 'green' }]}
-                                onPress={() => setModalBlock(!modalBlock)}>
-                                {block ? <Text style={styles.textStyle}>Unlock</Text> : <Text style={styles.textStyle}>Block</Text>}
-                            </Pressable> : <Pressable
-                                style={[styles.button, { backgroundColor: 'red' }]}
-                                onPress={() => setModalBlock(!modalBlock)}>
-                                {block ? <Text style={styles.textStyle}>Unlock</Text> : <Text style={styles.textStyle}>Block</Text>}
-                            </Pressable>}
+                            {userProfile.role === 1 && (
+                                <Pressable
+                                    style={[styles.button, { backgroundColor: block ? 'green' : 'red' }]}
+                                    onPress={() => setModalBlock(!modalBlock)}
+                                >
+                                    <Text style={styles.textStyle}>{block ? 'Unlock' : 'Block'}</Text>
+                                </Pressable>
+                            )}
+
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModalVisible(!modalVisible)}>

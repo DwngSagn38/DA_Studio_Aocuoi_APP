@@ -14,6 +14,12 @@ const KhachHangScreen = ({ navigation }) => {
   const [dienThoai, setdienThoai] = useState('')
   const [diaChi, setdiaChi] = useState('')
 
+
+  const validatePhoneNumber = (phoneNumber) => {
+    const regex = /^0\d{9}$/;
+    return regex.test(phoneNumber);
+  };
+
   const getData = async () => {
     const url = `${URL}/khachhangs`;
     try {
@@ -86,6 +92,15 @@ const KhachHangScreen = ({ navigation }) => {
         Alert.alert('Số điện thoại phải là số và có 10 số')
       } else {
         ToastAndroid.show('Số điện thoại phải là số và có 10 số', 0)
+      }
+      return;
+    }
+
+    if(!validatePhoneNumber(dienThoai)){
+      if (Platform.OS === 'ios') {
+        Alert.alert('Số điện thoại không đúng định dạng')
+      } else {
+        ToastAndroid.show('Số điện thoại không đúng định dạng', 0)
       }
       return;
     }
@@ -200,6 +215,7 @@ const KhachHangScreen = ({ navigation }) => {
       </View>
 
       <FlatList
+      showsVerticalScrollIndicator={false}
         data={listKhachHang}
         keyExtractor={item => item._id}
         renderItem={renderItem}></FlatList>
