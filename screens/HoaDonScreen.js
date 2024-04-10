@@ -132,6 +132,7 @@ const HoaDonScreen = ({ navigation }) => {
       {loading ? <ActivityIndicator color={'black'} />
         :
         <FlatList
+        showsVerticalScrollIndicator={false}
           data={ListTrangThai.length > 0 ? ListTrangThai : ListHoaDon}
           keyExtractor={item => item._id}
           renderItem={renderItem}></FlatList>}

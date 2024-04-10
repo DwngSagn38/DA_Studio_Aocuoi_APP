@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import { getDataUser } from './OptionMenu';
 const CongViecScreen = ({ navigation }) => {
     const [showPicker, setshowPicker] = useState(false);
     const [date, setdate] = useState(new Date());
@@ -16,6 +16,7 @@ const CongViecScreen = ({ navigation }) => {
     const [AddVisible, setAddVisible] = useState(false);
     const [idItem, setidItem] = useState('');
     const [checkAdd, setcheckAdd] = useState(true)
+    const [userProfile, setuserProfile] = useState([])
 
     const [tenCongViec, settenCongViec] = useState('');
     const [idNhanVien, setidNhanVien] = useState('');
@@ -43,6 +44,11 @@ const CongViecScreen = ({ navigation }) => {
     useEffect(() => {
         getData();
         getNhanVien()
+        const loadData = async ()=>{
+            const data = await getDataUser()
+            setuserProfile(data)
+        }
+        loadData()
     }, [])
 
     // Hàm chuyển đổi định dạng ngày
@@ -76,7 +82,7 @@ const CongViecScreen = ({ navigation }) => {
                     : <Text style={{ color: 'blue' }}>Đã làm</Text>}</Text>
                 <Text>Mô tả : {item.moTa ? item.moTa : 'Không có'}</Text>
                 <Text>Thời gian :  {formatFromDate} =={'>'} {formatToDate}</Text>
-                <TouchableOpacity onPress={() => {
+                {userProfile.role==1?<TouchableOpacity onPress={() => {
                     setidItem(item._id)
                     setoptionVisible(!optionVisible)
                     settenCongViec(item.tenCongViec)
@@ -87,7 +93,7 @@ const CongViecScreen = ({ navigation }) => {
                 }}
                     style={[styles.icon, { position: 'absolute', right: 20, top: 15 }]}>
                     <Image source={require('../assets/image/open-menu.png')} style={styles.icon} />
-                </TouchableOpacity>
+                </TouchableOpacity>:null}
             </View>
         )
     }
@@ -263,16 +269,16 @@ const CongViecScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
+            <View style={[styles.header, userProfile.role==0 ?{marginRight:'20%'}:null]}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image style={styles.icon}
                         source={require('../assets/image/back.png')} />
                 </TouchableOpacity>
                 <Text style={{ marginLeft: 20, fontSize: 18, fontWeight: 'bold' }}>Danh sách công việc</Text>
-                <TouchableOpacity onPress={() => { setAddVisible(true), resetInput(), setcheckAdd(true) }}>
+                {userProfile.role==1?<TouchableOpacity onPress={() => { setAddVisible(true), resetInput(), setcheckAdd(true) }}>
                     <Image style={styles.icon}
                         source={require('../assets/image/addjob.png')} />
-                </TouchableOpacity>
+                </TouchableOpacity>:null}
             </View>
 
             <FlatList
@@ -407,6 +413,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 30
     },
+    
     khachHang: {
         flexDirection: 'row',
         alignItems: 'center',

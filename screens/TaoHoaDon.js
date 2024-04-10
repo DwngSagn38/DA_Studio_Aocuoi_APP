@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, Pressable, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, Platform, Pressable, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Picker } from '@react-native-picker/picker'
 import { URL } from './HomeScreen';
@@ -27,6 +27,7 @@ const TaoHoaDon = ({ navigation }) => {
                 const data = await res.json();
                 setlistHDCT(data);
                 console.log('Id được tạo bill: ', id);
+                console.log(data.soLuong);
 
             } catch (error) {
                 console.log(error);
@@ -86,7 +87,7 @@ const TaoHoaDon = ({ navigation }) => {
         const data = await res.json();
         if (data.status == 200) {
             ToastAndroid.show(data.msg, 0);
-            getData()
+            getData();
         } else {
             ToastAndroid.show(data.msg, 0);
         }
@@ -103,13 +104,13 @@ const TaoHoaDon = ({ navigation }) => {
             const data = await res.json();
             if (data.status == 200) {
                 navigation.goBack();
-                await AsyncStorage.setItem('id_Bill', '');
+                await AsyncStorage.removeItem('id_Bill');
             }
             console.log('====================================');
             console.log(data.msg);
             console.log('====================================');
-        }else{
-            navigation.goBack(); 
+        } else {
+            navigation.goBack();
         }
     }
 
@@ -138,17 +139,15 @@ const TaoHoaDon = ({ navigation }) => {
         }
     }
     useEffect(() => {
-        // const unsubscribe = navigation.addListener('focus', () => {
-        // setTimeout(() => {
-        getDV();
         getKH();
-        getData();
-        // }, 1);
-        // });
-        // return unsubscribe;
-
-
-    }, [idKhachHang, navigation])
+        const unsubscribe = navigation.addListener('focus', () => {
+            setTimeout(() => {
+                getDV();
+                getData();
+            }, 1);
+        });
+        return unsubscribe;
+    }, [idKhachHang, navigation, ListDichVu,listHDCT])
 
     // hàm format price
     const formatPrice = (price) => {
@@ -158,17 +157,34 @@ const TaoHoaDon = ({ navigation }) => {
 
 
 
+    // useEffect(() => {
+       
+    //     // Tính tổng tiền của tất cả các mục
+    //     const totalBill = Object.keys(quantities).reduce((total, key) => {
+    //         const dichVu = ListDichVu.find(dv => dv._id == key);
+    //         const giaTien = dichVu ? dichVu.giaTien : 0;
+    //         return total + quantities[key] * giaTien;
+    //     }, 0);
+    //     // Cập nhật tổng tiền
+    //     setTongTien(totalBill);
+    // }, [quantities]);
+
+
+
+
+
     useEffect(() => {
         // Tính tổng tiền của tất cả các mục
-        const totalBill = Object.keys(quantities).reduce((total, key) => {
-            const dichVu = ListDichVu.find(dv => dv._id == key);
+        let total = 0;
+        listHDCT.forEach(item => {
+            const dichVu = ListDichVu.find(dv => dv._id == item.id_DichVu);
             const giaTien = dichVu ? dichVu.giaTien : 0;
-            return total + quantities[key] * giaTien;
-        }, 0);
-
-        // Cập nhật tổng tiền
-        setTongTien(totalBill);
-    }, [quantities]);
+            const Quantity = quantities[item.id_DichVu] || 0;
+            total += giaTien * Quantity;
+        });
+        // Cập nhật state mới
+        setTongTien(total);
+    }, [quantities, listHDCT]);
 
 
     const renderItem = ({ item, index }) => {
@@ -176,14 +192,15 @@ const TaoHoaDon = ({ navigation }) => {
         const Quantity = quantities[item.id_DichVu] || 0; // Số lượng của mục đang được hiển thị
 
         const decreaseQuantity = async (id_CTHD) => {
-            if (Quantity > 0) {
+            if (Quantity > 1) {
                 setQuantities({
                     ...quantities,
                     [item.id_DichVu]: Quantity - 1
                 });
                 await updateQuantity(id_CTHD, Quantity - 1)
             } else {
-                deleteHDCT(item.id_DichVu)
+                deleteHDCT(item._id)
+                setTongTien(0)
             }
         };
 
@@ -246,6 +263,7 @@ const TaoHoaDon = ({ navigation }) => {
                             setidKhachHang(itemValue)
                         }
                     }}>
+
                     <Picker.Item label='Chọn khách hàng' value='' />
                     {listKhachHang.map((kh) => (
                         <Picker.Item key={kh._id} label={kh.tenKhachHang} value={kh._id} />
@@ -259,7 +277,7 @@ const TaoHoaDon = ({ navigation }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
                 <View />
                 <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: 'bold' }}>Dịch vụ yêu cầu</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('DichVuScreen')}
+                <TouchableOpacity onPress={() => { navigation.navigate('DichVuScreen') }}
                     style={[styles.button, { backgroundColor: 'white' }]}>
                     <Image source={require('../assets/image/cloud.png')} style={styles.icon} />
                     <Text>Thêm dịch vụ</Text>
@@ -269,6 +287,7 @@ const TaoHoaDon = ({ navigation }) => {
                 <Text style={{ textAlign: 'center' }}>Hóa đơn đang rỗng{'\n'} thêm ngay dịch vụ để tiếp tục</Text>
                 : <View style={{ height: '69%' }}>
                     <FlatList
+                        showsVerticalScrollIndicator={false}
                         data={listHDCT}
                         keyExtractor={item => item._id}
                         renderItem={renderItem}></FlatList>
@@ -280,13 +299,37 @@ const TaoHoaDon = ({ navigation }) => {
                     }}>
                         <Text>Tổng tiền : {formatPrice(TongTien)}</Text>
                         <Pressable onPress={() => {
+                            let hasZeroQuantity = false;
+
+                            // Lặp qua danh sách các mục để kiểm tra số lượng của mỗi mục
+                            listHDCT.forEach(item => {
+                                if (quantities[item.id_DichVu] == undefined) {
+                                    // Nếu số lượng của một mục nào đó bằng 0, đặt biến flag thành true và thoát khỏi vòng lặp
+                                    hasZeroQuantity = true;
+                                    console.log(quantities[item.id_DichVu] );
+                                    return;
+                                }
+                            });
                             if (idKhachHang == '') {
-                                ToastAndroid.show('Vui lòng chọn khách hàng', 0);
-                            } else {
+                                if (Platform.OS === 'ios') {
+                                    Alert.alert('Vui lòng chọn khách hàng')
+                                } else {
+                                    ToastAndroid.show('Vui lòng chọn khách hàng', 0);
+                                }
+                            } else if (hasZeroQuantity) {
+                                // Nếu có mục nào có quantities = 0, hiển thị thông báo hoặc xử lý tương ứng
+                                if (Platform.OS == 'ios') {
+                                    Alert.alert('Vui lòng kiểm tra lại số lượng dịch vụ!')
+                                }
+                                else {
+                                    ToastAndroid.show('Vui lòng kiểm tra lại số lượng dịch vụ!', ToastAndroid.SHORT);
+                                }
+                            }
+                            else {
                                 navigation.navigate('CheckBill', {
                                     tongTien: TongTien,
                                     khachHang: KhachHang,
-                                    soDichVu: listHDCT.filter(hdct => hdct.soLuong > 0).length
+                                    soDichVu: listHDCT.length
                                 })
                             }
                         }}
@@ -294,8 +337,6 @@ const TaoHoaDon = ({ navigation }) => {
                             <Text>Xác nhận</Text>
                         </Pressable>
                     </View></View>}
-
-
         </View>
     )
 }

@@ -26,7 +26,18 @@ const RenderItem = ({ icon, title, onPress }) => {
   );
 };
 
-
+export const getDataUser = async () => {
+  try {
+    const userData = await AsyncStorage.getItem('User');
+    if (userData !== null) {
+      return JSON.parse(userData);
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log('Lỗi : ', error);
+  }
+}
 
 const OptionMenu = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,11 +46,16 @@ const OptionMenu = ({ navigation }) => {
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
 
+  const [userProfile, setuserProfile] = useState([])
+
   const newData = {
     fullname: fullName,
     username: username,
     password: password,
   };
+
+
+
 
   const resetData = () => {
     setFullName('')
@@ -80,6 +96,16 @@ const OptionMenu = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getDataUser();
+      setuserProfile(data);
+    };
+    loadData();
+    
+  }, [])
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -101,11 +127,11 @@ const OptionMenu = ({ navigation }) => {
         title={"Danh sách nhân viên"}
         onPress={() => navigation.navigate("ListNhanVien")}
       />
-      <RenderItem
+      {userProfile.role==1?<RenderItem
         icon={require("../assets/image/add_user2.png")}
         title={"Thêm nhân viên mới"}
         onPress={() => setModalVisible(true)}
-      />
+      />:null}
       <RenderItem
         icon={require("../assets/image/gust.png")}
         title={"Danh sách khách hàng"}
@@ -121,7 +147,7 @@ const OptionMenu = ({ navigation }) => {
         title={"Đăng xuất"}
         onPress={() => {
           setdangXuatModal(true)
-          
+
         }}
       />
 
@@ -186,7 +212,7 @@ const OptionMenu = ({ navigation }) => {
                   placeholder="Họ tên nhân viên"
                 />
                 <TextInput
-                  value={username}
+                  value={username.toLocaleLowerCase().trim()}
                   onChangeText={(txt) => setUsername(txt)}
                   style={{
                     padding: 10,
@@ -197,7 +223,7 @@ const OptionMenu = ({ navigation }) => {
                   placeholder="Username"
                 />
                 <TextInput
-                  value={password}
+                  value={password.toLocaleLowerCase().trim()}
                   onChangeText={(txt) => setPassword(txt)}
                   style={{
                     padding: 10,
@@ -214,7 +240,7 @@ const OptionMenu = ({ navigation }) => {
                 style={[styles.button, styles.buttonClose]}
                 onPress={() => {
                   setModalVisible(!modalVisible),
-                  resetData()
+                    resetData()
                 }}
               >
                 <Text style={styles.textStyle}>Cancel</Text>
@@ -251,11 +277,12 @@ const OptionMenu = ({ navigation }) => {
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => { {
-                  setdangXuatModal(!dangXuatModal)
-                  navigation.navigate('LoginScreen')
-                }
-                  
+                onPress={() => {
+                  {
+                    setdangXuatModal(!dangXuatModal)
+                    navigation.navigate('LoginScreen')
+                  }
+
 
                 }
                 }>

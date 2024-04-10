@@ -101,6 +101,7 @@ const DichVuScreen = ({ navigation }) => {
       </View>
 
       <FlatList
+      showsVerticalScrollIndicator={false}
         numColumns={2}
         data={ListSearch.length > 0 ? ListSearch : ListDichVu}
         keyExtractor={item => item._id}

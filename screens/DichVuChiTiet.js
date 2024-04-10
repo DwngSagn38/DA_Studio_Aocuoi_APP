@@ -1,4 +1,4 @@
-import { Image, ImageBackground, Modal, Pressable, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, ImageBackground, Modal, Platform, Pressable, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { URL } from './HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -107,6 +107,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
         id_HoaDon: id_Bill,
         id_DichVu: item._id,
         giaTien: item.giaTien,
+        soLuong:0
       }
 
       const res = await fetch(url, {
@@ -119,11 +120,19 @@ const DichVuChiTiet = ({ navigation, route }) => {
 
       const data = await res.json();
       if (data.status === 200) {
+       if(Platform.OS==='android'){
         ToastAndroid.show(data.msg, 0);
+       }else{
+        Alert.alert(data.msg)
+       }
         navigation.navigate("TaoHoaDon");
         setcheckAdd(true);
       } else {
-        ToastAndroid.show(data.msg, 0);
+        if(Platform.OS==='android'){
+          ToastAndroid.show(data.msg, 0);
+         }else{
+          Alert.alert(data.msg)
+         }
       }
     } else {
       addBill();
@@ -200,7 +209,7 @@ const DichVuChiTiet = ({ navigation, route }) => {
         height: '23%', marginBottom: '1%',
         padding: 20
       }}>
-        <ScrollView style={{ height: 150, gap: 12 }}>
+        <ScrollView style={{ height: 150, gap: 12 }} showsVerticalScrollIndicator={false}>
           <Text style={{ fontSize: 15, fontWeight: '700' }}>Mô tả</Text>
           <Text>{item.moTa}</Text>
         </ScrollView>
@@ -227,7 +236,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: 'black'
+    color: 'white'
   },
   btn: {
     height: 50,

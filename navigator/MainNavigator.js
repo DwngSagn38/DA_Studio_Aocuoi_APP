@@ -12,7 +12,6 @@ import ManageUser from '../screens/ManageUser';
 import KhachHangScreen from '../screens/KhachHangScreen';
 import OptionMenu from '../screens/OptionMenu';
 import ListNhanVien from '../screens/ListNhanVien';
-import ThemNhanVien from '../screens/ThemNhanVien';
 import Header from './Header';
 import CongViecScreen from '../screens/CongViecScreen';
 import AddUpdateDichVu from '../screens/AddUpdateDichVu';
@@ -74,7 +73,6 @@ const MainNavigator = () => {
             <Stack.Screen name='Profile' component={Profile} />
             <Stack.Screen name='ManageUser' component={ManageUser} />
             <Stack.Screen name='KhachHangScreen' component={KhachHangScreen} />
-            <Stack.Screen name='ThemNhanVien' component={ThemNhanVien} />
             <Stack.Screen name='ListNhanVien' component={ListNhanVien} />
             <Stack.Screen name='OptionMenu' component={OptionMenu} />
             <Stack.Screen name='CongViecScreen' component={CongViecScreen} />

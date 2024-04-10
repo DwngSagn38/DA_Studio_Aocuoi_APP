@@ -130,7 +130,7 @@ const ManageUser = ({ navigation, route }) => {
             backgroundColor: 'pink',
             borderRadius: 10,
             padding: 15,
-            marginHorizontal: 130,
+            marginHorizontal: 100,
             marginTop: 10,
             alignItems: 'center'
           }}>
@@ -138,9 +138,9 @@ const ManageUser = ({ navigation, route }) => {
         </TouchableOpacity>
         <View style={styles.textInput}>
           <TextInput style={styles.input} value={Fullname} placeholder='Full name' onChangeText={(txt) => setFullname(txt)} />
-          <TextInput style={styles.input} value={Email} placeholder='Email' onChangeText={(txt) => setEmail(txt)} />
+          <TextInput style={styles.input} value={Email} placeholder='Email' onChangeText={(txt) => setEmail(txt.toLocaleLowerCase().trim())} />
           <TextInput style={styles.input} value={Address} placeholder='Address' onChangeText={(txt) => setAddress(txt)} />
-          <TextInput style={styles.input} value={Phone} placeholder='Phone' onChangeText={(txt) => setPhone(txt)} />
+          <TextInput style={styles.input} keyboardType='numeric' value={Phone} placeholder='Phone' onChangeText={(txt) => setPhone(txt.trim())} />
         </View>
         <TouchableOpacity style={styles.button} onPress={saveProfile}>
           <Text>LƯU THÔNG TIN</Text>

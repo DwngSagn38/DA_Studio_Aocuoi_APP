@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SlideShow from '../component/SlideShow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const URL = 'http://192.168.100.5:3000';
+export const URL = 'http://192.168.1.109:3000';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -16,6 +16,11 @@ const HomeScreen = ({ navigation }) => {
     const id = await AsyncStorage.getItem('id_Bill');
     if (id != null) {
       setidBill(id);
+      console.log('Bill đang có: ', id);
+    }
+    else {
+      setidBill(null);
+      console.log('Không có bill');
     }
   }
 
@@ -76,13 +81,15 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+     setTimeout(() => {
       getListDichVu();
       retrieveData();
       checkIdBill();
+     }, 1);
     });
     return unsubscribe;
 
-  }, [navigation])
+  }, [navigation,idBill])
 
   const renderItem = ({ item, index }) => {
     return (
